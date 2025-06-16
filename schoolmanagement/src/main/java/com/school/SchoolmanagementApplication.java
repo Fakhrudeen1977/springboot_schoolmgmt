@@ -14,6 +14,7 @@ public class SchoolmanagementApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		logger.info("Spring Boot Application Loading successfully");
+		logger.info("Merging from Feature branch to Master");
 		
 		SpringApplication.run(SchoolmanagementApplication.class, args);	
 		
