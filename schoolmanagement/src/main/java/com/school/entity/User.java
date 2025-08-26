@@ -19,7 +19,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-//@Table(	name = "Jwt_User", 
 @Table(	name = "Users",
 uniqueConstraints = { 
 	@UniqueConstraint(columnNames = "User_Name"),
