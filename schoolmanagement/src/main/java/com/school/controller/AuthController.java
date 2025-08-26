@@ -77,7 +77,7 @@ public class AuthController {
 				.collect(Collectors.toList());
 
 		roleList = roles;
-		System.out.println("Role List" + " " + roleList.get(0) + " " + roleList.get(1));
+		//System.out.println("Role List" + " " + roleList.get(0) + " " + roleList.get(1));
 
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getUserId());
 		System.out.println(refreshToken.getToken());
