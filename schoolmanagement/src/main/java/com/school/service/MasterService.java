@@ -2,6 +2,8 @@ package com.school.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.school.dto.BloodGroupDto;
 import com.school.dto.ClassDetailsDto;
 import com.school.dto.UserDto;
@@ -9,12 +11,11 @@ import com.school.entity.ClassDetails;
 import com.school.entity.Role;
 import com.school.entity.Student;
 import com.school.exception.BloodGroupIdNotFoundException;
-import com.school.exception.StudentNotFoundException;
 
 
 public interface MasterService {
 	public List<BloodGroupDto> getBloodGroupList();
-	public List<ClassDetails> getClassDetailList();
+	public Page<ClassDetails> getClassDetailList(int currentPage,int pageSize);
 	public List<Role> getRoleList();
 	public BloodGroupDto saveBloodGroup(BloodGroupDto bloodGrpDto);
 	public ClassDetailsDto saveClassDetail(ClassDetailsDto classDetailsDto);

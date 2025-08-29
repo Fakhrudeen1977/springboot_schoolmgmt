@@ -1,6 +1,5 @@
 package com.school.dto;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 

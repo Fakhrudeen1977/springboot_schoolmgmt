@@ -8,9 +8,11 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.school.controller.MasterController;
 import com.school.dto.BloodGroupDto;
 import com.school.dto.ClassDetailsDto;
 import com.school.dto.UserDto;
@@ -63,9 +65,14 @@ public class MasterServiceImpl implements MasterService {
 	
 
 	@Override
-	public List<ClassDetails> getClassDetailList() {
+	public Page<ClassDetails> getClassDetailList(int currentPage,int pageSize) {
 		// TODO Auto-generated method stub
-		return classRepository.findAll();
+				
+		Pageable paging = PageRequest.of(currentPage, pageSize);
+
+		Page<ClassDetails> pagedResult = classRepository.findAll(paging);
+		
+		return pagedResult;
 	}
 
 	@Override

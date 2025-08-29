@@ -57,19 +57,11 @@ public class StudentController {
 			@RequestParam int photoNumber, @RequestParam("file") MultipartFile file) throws IOException,PhotoNumberExistException {
 
 		
+		logger.info("SaveStudent End point called");
 		StudentDto savedStudentDto = new StudentDto();
 		Date dob = null;
-		System.out.println("Saved Student called"+" "+dateOfBirth);
-		char c=bloodGroupName.charAt(bloodGroupName.length()-1);
-		String str=String.valueOf(c);
 		
-		
-		if(str.equalsIgnoreCase("-")){
-			
-		}
-		else {
-			bloodGroupName=bloodGroupName.trim()+"+";
-		}			
+		logger.info("Saved Student called"+" "+dateOfBirth);
 		
 		savedStudentDto.setStudentName(studentName);
 		savedStudentDto.setFatherName(fatherName);
@@ -114,20 +106,7 @@ public class StudentController {
 		System.out.println("Update Student called"+" "+dateOfBirth);
 		StudentDto savedStudentDto = new StudentDto();
 		Date dob = null;		
-		
-		char c=bloodGroupName.charAt(bloodGroupName.length()-1);
-		System.out.println("Character"+" +c");
-		String str=String.valueOf(c);
-		System.out.println("String "+" "+str);
-		
-		
-		if(str.equalsIgnoreCase("-")){
-			
-		}
-		else {
-			bloodGroupName=bloodGroupName.trim()+"+";
-		}			
-		
+				
 		savedStudentDto.setStudentId(studentId);
 		savedStudentDto.setStudentName(studentName);
 		savedStudentDto.setFatherName(fatherName);
