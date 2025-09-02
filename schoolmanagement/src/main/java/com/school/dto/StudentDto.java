@@ -22,6 +22,7 @@ public class StudentDto implements Serializable {
 	private String imageType;
 	private byte[] imageData;	
 	private String message;
+	private String email;
 	
 	
 	public StudentDto() {
@@ -161,6 +162,14 @@ public class StudentDto implements Serializable {
 
 	public void setBloodGroupName(String bloodGroupName) {
 		this.bloodGroupName = bloodGroupName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	

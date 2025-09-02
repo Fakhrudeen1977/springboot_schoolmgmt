@@ -34,7 +34,7 @@ public class Student implements Serializable{
 	    private String imageFileName;
 	    private String imageType;
 	    private byte[] imageData;
-
+	    private String email;
 	    
 	    public Student() {
 	    	
@@ -177,6 +177,15 @@ public class Student implements Serializable{
 
 		public void setBloodGroupName(String bloodGroupName) {
 			this.bloodGroupName = bloodGroupName;
+		}
+
+		@Column(name="EMAIL")
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
 		}
 
 		

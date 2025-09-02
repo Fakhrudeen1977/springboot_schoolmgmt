@@ -54,12 +54,24 @@ public class StudentController {
 			@RequestParam Long bloodId,
 			@RequestParam String bloodGroupName,
 			@RequestParam String mobileNumber, @RequestParam String contactAddress,
+			@RequestParam String email,
 			@RequestParam int photoNumber, @RequestParam("file") MultipartFile file) throws IOException,PhotoNumberExistException {
 
 		
 		logger.info("SaveStudent End point called");
 		StudentDto savedStudentDto = new StudentDto();
 		Date dob = null;
+		
+		char c=bloodGroupName.charAt(bloodGroupName.length()-1);
+		String str=String.valueOf(c);
+
+		
+		if(str.equalsIgnoreCase("-")){
+			
+		}
+		else {
+			bloodGroupName=bloodGroupName.trim()+"+";
+		}			
 		
 		logger.info("Saved Student called"+" "+dateOfBirth);
 		
@@ -73,6 +85,8 @@ public class StudentController {
 		savedStudentDto.setMobileNumber(mobileNumber);
 		savedStudentDto.setContactAddress(contactAddress);
 		savedStudentDto.setPhotoNumber(photoNumber);		
+		
+		savedStudentDto.setEmail(email);
 		
 		savedStudentDto.setImageFileName(file.getOriginalFilename());
 		savedStudentDto.setImageType(file.getContentType());
@@ -101,11 +115,23 @@ public class StudentController {
 			@RequestParam Long bloodId,
 			@RequestParam String bloodGroupName,
 			@RequestParam String mobileNumber, @RequestParam String contactAddress,
+			@RequestParam String email,
 			@RequestParam int photoNumber, @RequestParam("file") MultipartFile file) throws IOException,PhotoNumberExistException {
 
 		System.out.println("Update Student called"+" "+dateOfBirth);
 		StudentDto savedStudentDto = new StudentDto();
-		Date dob = null;		
+		Date dob = null;	
+		
+		char c=bloodGroupName.charAt(bloodGroupName.length()-1);
+		String str=String.valueOf(c);
+
+		
+		if(str.equalsIgnoreCase("-")){
+			
+		}
+		else {
+			bloodGroupName=bloodGroupName.trim()+"+";
+		}			
 				
 		savedStudentDto.setStudentId(studentId);
 		savedStudentDto.setStudentName(studentName);
@@ -118,7 +144,7 @@ public class StudentController {
 		savedStudentDto.setMobileNumber(mobileNumber);
 		savedStudentDto.setContactAddress(contactAddress);
 		savedStudentDto.setPhotoNumber(photoNumber);		
-		
+		savedStudentDto.setEmail(email);
 		savedStudentDto.setImageFileName(file.getOriginalFilename());
 		savedStudentDto.setImageType(file.getContentType());
 		savedStudentDto.setImageData(ImageUtil.compressImage(file.getBytes()));
@@ -167,7 +193,7 @@ public class StudentController {
 					studentViewDto.setMobileNumber(studentDto.getMobileNumber());
 					studentViewDto.setContactAddress(studentDto.getContactAddress());
 					studentViewDto.setPhotoNumber(studentDto.getPhotoNumber());		
-					
+					studentViewDto.setEmail(studentDto.getEmail());
 					studentViewDto.setImageFileName(studentDto.getImageFileName());
 					studentViewDto.setImageType(studentDto.getImageType());
 					studentViewDto.setImageData(ImageUtil.decompressImage(studentDto.getImageData()));
@@ -203,7 +229,7 @@ public class StudentController {
 			studentViewDto.setMobileNumber(studentDto.get().getMobileNumber());
 			studentViewDto.setContactAddress(studentDto.get().getContactAddress());
 			studentViewDto.setPhotoNumber(studentDto.get().getPhotoNumber());		
-			
+			studentViewDto.setEmail(studentDto.get().getEmail());
 			studentViewDto.setImageFileName(studentDto.get().getImageFileName());
 			studentViewDto.setImageType(studentDto.get().getImageType());
 			studentViewDto.setImageData(ImageUtil.decompressImage(studentDto.get().getImageData()));

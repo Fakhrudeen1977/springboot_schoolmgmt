@@ -18,6 +18,7 @@ public class StudentViewDto {
 	private byte[] imageData;	
 	private String imageFileName;
 	private String imageType;
+	private String email;
 	
 	public StudentViewDto() {
 		
@@ -148,6 +149,14 @@ public class StudentViewDto {
 
 	public void setBloodGroupName(String bloodGroupName) {
 		this.bloodGroupName = bloodGroupName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	
