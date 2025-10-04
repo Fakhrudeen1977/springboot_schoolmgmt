@@ -10,12 +10,19 @@ import org.springframework.stereotype.Service;
 
 import com.school.dto.StudentDto;
 import com.school.entity.Student;
+import com.school.exception.GlobalExceptionHandler;
 import com.school.exception.PhotoNumberExistException;
 import com.school.exception.StudentNotFoundException;
 import com.school.mapper.OrikaBeanMapper;
+import com.school.mapper.OrikaBeanMapperImpl;
 import com.school.repository.StudentRepository;
+
 @Service
 public class StudentServiceImpl implements StudentService{
+
+    private final GlobalExceptionHandler globalExceptionHandler;
+
+    private final OrikaBeanMapperImpl orikaBeanMapperImpl;
 
 	@Autowired
 	private StudentRepository studentRepository;
@@ -24,17 +31,24 @@ public class StudentServiceImpl implements StudentService{
 	private OrikaBeanMapper mapper;
 	
 	private int photoNumberCount=0;
+
+    StudentServiceImpl(OrikaBeanMapperImpl orikaBeanMapperImpl, GlobalExceptionHandler globalExceptionHandler) {
+        this.orikaBeanMapperImpl = orikaBeanMapperImpl;
+        this.globalExceptionHandler = globalExceptionHandler;
+    }
 	
 	@Override
 	@Transactional
 	public StudentDto saveStudent(StudentDto studentDto) throws PhotoNumberExistException  {
 		
 		
-		StudentDto savedDto=null;
+		StudentDto savedDto=null;		
 		Student student= mapper.map(studentDto, Student.class);
-		
+				
 		if(!checkPhotoNumberExistOrNot(student.getPhotoNumber())) {
 			System.out.println("Saveed Studetn Information");
+			
+		
 			student= studentRepository.saveAndFlush(student);
 			savedDto  = mapper.map(student, StudentDto.class);
 			return savedDto;

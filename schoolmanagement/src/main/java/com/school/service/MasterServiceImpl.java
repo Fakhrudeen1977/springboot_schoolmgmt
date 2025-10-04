@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 
 import com.school.dto.BloodGroupDto;
 import com.school.dto.ClassDetailsDto;
+import com.school.dto.ReligionDto;
 import com.school.dto.UserDto;
 import com.school.entity.BloodGroup;
 import com.school.entity.ClassDetails;
+import com.school.entity.Religion;
 import com.school.entity.Role;
 import com.school.entity.Student;
 import com.school.entity.User;
@@ -25,6 +27,7 @@ import com.school.exception.BloodGroupIdNotFoundException;
 import com.school.mapper.OrikaBeanMapper;
 import com.school.repository.BloodRepository;
 import com.school.repository.ClassRepository;
+import com.school.repository.ReligionRepository;
 import com.school.repository.RoleRepository;
 import com.school.repository.StudentRepository;
 import com.school.repository.UserRepository;
@@ -44,6 +47,10 @@ public class MasterServiceImpl implements MasterService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private ReligionRepository religionRepository;
+
 
 	@Autowired
 	private OrikaBeanMapper mapper;
@@ -165,6 +172,17 @@ public class MasterServiceImpl implements MasterService {
 		userRepository.deleteRolesByUserId(userId);
 		userRepository.deleteByUserId(userId);		
 		return 1;
+	}
+
+
+
+	@Override
+	public List<ReligionDto> getReligionList() {
+		
+		List<Religion> religionList= religionRepository.findAll();
+		List<ReligionDto> religionDtoList=mapper.mapAsList(religionList, ReligionDto.class);
+		return religionDtoList;
+		
 	}
 	
 

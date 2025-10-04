@@ -9,35 +9,57 @@ public class StudentDto implements Serializable {
 	private Long studentId;
 	private String studentName;
 	private String fatherName;
+	private String motherName;
 	private String gender;
 	private Date dateOfBirth;
 	private String className;
 	private Long classId;
 	private Long bloodId;
 	private String bloodGroupName;
-	private String mobileNumber;
+	private String fatherMobileNumber;
+	private String motherMobileNumber;
+	private String aadharCardNumber;
 	private String contactAddress;
 	private int photoNumber;
 	private String imageFileName;
 	private String imageType;
 	private byte[] imageData;	
 	private String message;
-	private String email;
+	private String email;		
+	private Long religionId;
+	private String religionName;
+	private StudentImageDto studentImage;
 	
 	
 	public StudentDto() {
+				
+	}	
 
-	}
-	
 	public Long getStudentId() {
 		return studentId;
 	}
 
-	public void setStudentId(Long studentId) {
+	public void setStudentId(Long studentId) {		
 		this.studentId = studentId;
 	}
 
+	public Long getReligionId() {
+		return religionId;
+	}
+
+	public void setReligionId(Long religionId) {
+		this.religionId = religionId;
+	}
 	
+
+	public String getReligionName() {
+		return religionName;
+	}
+
+	public void setReligionName(String religionName) {
+		this.religionName = religionName;
+	}
+
 
 	public String getFatherName() {
 		return fatherName;
@@ -46,6 +68,7 @@ public class StudentDto implements Serializable {
 	public void setFatherName(String fatherName) {
 		this.fatherName = fatherName;
 	}
+	
 
 	public String getGender() {
 		return gender;
@@ -63,13 +86,7 @@ public class StudentDto implements Serializable {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
+	
 
 	public String getContactAddress() {
 		return contactAddress;
@@ -172,6 +189,52 @@ public class StudentDto implements Serializable {
 		this.email = email;
 	}
 
+	public String getMotherName() {
+		return motherName;
+	}
+
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
+	}
+
+	public String getFatherMobileNumber() {
+		return fatherMobileNumber;
+	}
+
+	public void setFatherMobileNumber(String fatherMobileNumber) {
+		this.fatherMobileNumber = fatherMobileNumber;
+	}
+
+	public String getMotherMobileNumber() {
+		return motherMobileNumber;
+	}
+
+	public void setMotherMobileNumber(String motherMobileNumber) {
+		this.motherMobileNumber = motherMobileNumber;
+	}
+
+	public String getAadharCardNumber() {
+		return aadharCardNumber;
+	}
+
+	public void setAadharCardNumber(String aadharCardNumber) {
+		this.aadharCardNumber = aadharCardNumber;
+	}
+
+	public StudentImageDto getStudentImage() {
+		
+		return studentImage;
+	}
+
+	public void setStudentImage(StudentImageDto studentImage) {
+		
+		this.studentImage = studentImage;
+		
+		
+	}
+	
+
+	
 	
 	
 
