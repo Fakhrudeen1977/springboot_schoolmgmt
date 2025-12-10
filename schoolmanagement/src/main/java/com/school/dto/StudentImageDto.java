@@ -6,6 +6,7 @@ public class StudentImageDto implements Serializable {
 	
 	
 	private static final long serialVersionUID = 1L;
+	private Long imageId;
 	private String imageFileName;
 	private String imageType;
 	private byte[] imageData;
@@ -13,6 +14,14 @@ public class StudentImageDto implements Serializable {
 	
 	public StudentImageDto() {
 		
+	}
+	
+	public Long getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(Long imageId) {
+		this.imageId = imageId;
 	}
 	
 	public String getImageFileName() {

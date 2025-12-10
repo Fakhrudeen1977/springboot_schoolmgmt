@@ -24,7 +24,7 @@ public class StudentDto implements Serializable {
 	private String imageFileName;
 	private String imageType;
 	private byte[] imageData;	
-	private String message;
+	
 	private String email;		
 	private Long religionId;
 	private String religionName;
@@ -96,7 +96,7 @@ public class StudentDto implements Serializable {
 		this.contactAddress = contactAddress;
 	}
 	
-
+   
 	public byte[] getImageData() {
 		return imageData;
 	}
@@ -106,7 +106,7 @@ public class StudentDto implements Serializable {
 	}
 
 
-
+	
 	public String getImageType() {
 		return imageType;
 	}
@@ -122,7 +122,7 @@ public class StudentDto implements Serializable {
 	public void setPhotoNumber(int photoNumber) {
 		this.photoNumber = photoNumber;
 	}
-
+	
 	public String getImageFileName() {
 		return imageFileName;
 	}
@@ -131,13 +131,7 @@ public class StudentDto implements Serializable {
 		this.imageFileName = imageFileName;
 	}
 
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
+	
 
 	public String getStudentName() {
 		return studentName;
@@ -232,8 +226,8 @@ public class StudentDto implements Serializable {
 		
 		
 	}
-	
 
+	
 	
 	
 	

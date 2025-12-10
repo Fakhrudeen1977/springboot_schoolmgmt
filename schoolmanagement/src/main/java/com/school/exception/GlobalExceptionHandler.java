@@ -13,9 +13,9 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 		
 	
-	 @ExceptionHandler(StudentNotFoundException.class)
-	  public ResponseEntity<ErrorResponse> studentNotFoundException(StudentNotFoundException ex, WebRequest request) {
-		 System.out.println("StudentNotFound Exception Occured");
+	 @ExceptionHandler(StudentIdNotFoundException.class)
+	  public ResponseEntity<ErrorResponse> studentIdNotFoundException(StudentIdNotFoundException ex, WebRequest request) {
+		
 		 ErrorResponse message = new ErrorResponse(
 	        HttpStatus.NOT_FOUND.value(),
 	        new Date(),

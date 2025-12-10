@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,11 +14,11 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "STUDENT_IMAGE")
+
 public class StudentImage implements Serializable {
 
 	
@@ -27,24 +28,25 @@ public class StudentImage implements Serializable {
 	private String imageType;
 	private byte[] imageData;
 	private Student student;
-	 
+	
 	public StudentImage() {
-		System.out.println("Loading Student Image");
+		
 	}
+	
 
 	@Id
 	@Column(name = "IMAGE_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STUDENT_IMAGE_SEQ")
-	@SequenceGenerator(sequenceName = "STUDENT_IMAGE_SEQ", allocationSize = 1, name = "STUDENT_IMAGE_SEQ")
+	@SequenceGenerator(sequenceName = "STUDENT_IMAGE_SEQ", allocationSize = 1, name = "STUDENT_IMAGE_SEQ") 
 	public Long getImageId() {
 		return imageId;
 	}
 
+
 	public void setImageId(Long imageId) {
 		this.imageId = imageId;
 	}
-	
- 
+	   
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="STUDENT_ID")
 	@JsonBackReference

@@ -1,8 +1,10 @@
 package com.school.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.school.entity.Student;
+import org.springframework.stereotype.Repository;
+import com.school.entity.StudentImage;
 
-public interface StudentImageRepository extends JpaRepository<Student, Long> {
+@Repository
+public interface StudentImageRepository extends JpaRepository<StudentImage, Long> {
 
 }

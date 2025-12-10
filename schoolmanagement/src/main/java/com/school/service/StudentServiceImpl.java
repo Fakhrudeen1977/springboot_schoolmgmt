@@ -10,45 +10,36 @@ import org.springframework.stereotype.Service;
 
 import com.school.dto.StudentDto;
 import com.school.entity.Student;
-import com.school.exception.GlobalExceptionHandler;
+import com.school.entity.StudentImage;
 import com.school.exception.PhotoNumberExistException;
-import com.school.exception.StudentNotFoundException;
+import com.school.exception.StudentIdNotFoundException;
 import com.school.mapper.OrikaBeanMapper;
-import com.school.mapper.OrikaBeanMapperImpl;
 import com.school.repository.StudentRepository;
 
 @Service
 public class StudentServiceImpl implements StudentService{
-
-    private final GlobalExceptionHandler globalExceptionHandler;
-
-    private final OrikaBeanMapperImpl orikaBeanMapperImpl;
+ 
 
 	@Autowired
 	private StudentRepository studentRepository;
+	
 	
 	@Autowired
 	private OrikaBeanMapper mapper;
 	
 	private int photoNumberCount=0;
 
-    StudentServiceImpl(OrikaBeanMapperImpl orikaBeanMapperImpl, GlobalExceptionHandler globalExceptionHandler) {
-        this.orikaBeanMapperImpl = orikaBeanMapperImpl;
-        this.globalExceptionHandler = globalExceptionHandler;
-    }
-	
+    
 	@Override
 	@Transactional
 	public StudentDto saveStudent(StudentDto studentDto) throws PhotoNumberExistException  {
 		
 		
-		StudentDto savedDto=null;		
-		Student student= mapper.map(studentDto, Student.class);
-				
-		if(!checkPhotoNumberExistOrNot(student.getPhotoNumber())) {
-			System.out.println("Saveed Studetn Information");
-			
+		StudentDto savedDto=null;			
+		Student student= mapper.map(studentDto, Student.class);				
 		
+		if(!checkPhotoNumberExistOrNot(student.getPhotoNumber())) {
+			System.out.println("Saveed Studetn Information");	
 			student= studentRepository.saveAndFlush(student);
 			savedDto  = mapper.map(student, StudentDto.class);
 			return savedDto;
@@ -56,8 +47,7 @@ public class StudentServiceImpl implements StudentService{
 		
 		else
 			throw new PhotoNumberExistException("Photo Number"+" "+studentDto.getPhotoNumber()+" "+ "Already Exist");
-				
-		
+					
 		
 	}
 	
@@ -66,19 +56,26 @@ public class StudentServiceImpl implements StudentService{
 	@Transactional
 	public StudentDto updateStudent(StudentDto studentDto) throws PhotoNumberExistException  {
 		
-		System.out.println("Update Student called ********");
-		StudentDto savedDto=null;
-		Student student= mapper.map(studentDto, Student.class);
 		
-		if(checkPhotoNumberExistOrNot(student.getPhotoNumber()) && photoNumberCount==1 ) {
-			System.out.println("Saveed Studetn Information");
-			student= studentRepository.saveAndFlush(student);
-			savedDto  = mapper.map(student, StudentDto.class);
+		StudentDto savedDto=null;				
+		Student student= mapper.map(studentDto, Student.class);		
+		StudentImage studentImage=student.getStudentImage();
+		
+		if(checkPhotoNumberExistOrNot(student.getPhotoNumber()) && student.getStudentId()!=null) {
+			
+			System.out.println("Update Studennt PhotoNumber Exist"+" "+photoNumberCount);
+				student= studentRepository.saveAndFlush(student);
+				
+				
+				savedDto  = mapper.map(student, StudentDto.class);
+			
+			
 			return savedDto;
 		}
 		
-		else if(!checkPhotoNumberExistOrNot(student.getPhotoNumber()) && (photoNumberCount==0 )) {
-			System.out.println("Saveed Studetn Information");
+		else if(!checkPhotoNumberExistOrNot(student.getPhotoNumber())) {
+			System.out.println("Update Student PhotoNumber not Exist"+" "+photoNumberCount);
+			
 			student= studentRepository.saveAndFlush(student);
 			savedDto  = mapper.map(student, StudentDto.class);
 			return savedDto;
@@ -86,10 +83,11 @@ public class StudentServiceImpl implements StudentService{
 		
 		
 		else
-			throw new PhotoNumberExistException("Photo Number"+" "+studentDto.getPhotoNumber()+" "+ "Already Exist");
-				
+			throw new PhotoNumberExistException("Photo Number"+" "+studentDto.getPhotoNumber()+" "+ "Already Exist"); 	
 		
 		
+		
+	
 	}
 	
 	
@@ -113,15 +111,16 @@ public class StudentServiceImpl implements StudentService{
 	
 	@Override
 	public List<StudentDto> getStudentList() {				
+		System.out.println("Reached GetStudent List");
+		//List<StudentViewDto> studentList=studentRepository.getStudentList();	
 		
-		List<Student> studentList= studentRepository.getStudentList();
-		System.out.println("Student List"+studentList.size());
-		List<StudentDto> studentDtoList  = mapper.mapAsList(studentList, StudentDto.class);		
+		List<Student> studentList=studentRepository.findAll();
+		//StudentDto savedDto  = mapper.map(studentList, StudentDto.class);
 		
-		return studentDtoList;
+		List<StudentDto> savedDto=mapper.mapAsList(studentList, StudentDto.class);
+		return savedDto;
 		
 	}
-		
 	public boolean checkStudentIdExistOrNot(Long studentId) {
 		boolean isFlag=false;
 		Optional<Student> option = studentRepository.findById(studentId);
@@ -133,14 +132,31 @@ public class StudentServiceImpl implements StudentService{
 		return isFlag;
 	}	
 	
+	
+	
+	@Override
+	public StudentDto getStudentById(Long studentId) throws StudentIdNotFoundException{
+		
+		Student  student= studentRepository.findById(studentId).orElseThrow( ()-> new StudentIdNotFoundException("Student Id:"+" "+studentId+" "+ "Does not  Exist")); 	
+	
+		StudentDto savedDto  = mapper.map(student,  StudentDto.class);
+				
+	    return savedDto;
+		
+		
+	}
+	
+	
+	
 	@Override
 	@Transactional
-	public void  deleteByStudentId(Long studentId) throws StudentNotFoundException {	
+	public void  deleteByStudentId(Long studentId)  {	
 			 
 			 if(this.checkStudentIdExistOrNot(studentId)) 
 				  studentRepository.deleteByStudentId(studentId);		 
 
 }
+	/*
 	@Override
 	public List<Student> getMaleStudentList() {
 		return studentRepository.getMaleStudentList();
@@ -158,24 +174,13 @@ public class StudentServiceImpl implements StudentService{
 		return studentRepository.getBirthBabiesList();
 		
 	}
-	@Override
-	public Optional<StudentDto> getStudentById(Long studentId) {
-		
-		Optional<Student>  student= studentRepository.findById(studentId);	
-		Student getStudent=student.get();
-			
-		StudentDto savedDto  = mapper.map(getStudent,  StudentDto.class);
-		
-		Optional<StudentDto> saveDtoOptional = Optional.of(savedDto);
-		
-		return saveDtoOptional;
-		
-	}
+	
 	@Override
 	public Optional<Student> getImageById(Long studentId) {
 		// TODO Auto-generated method stub
 		return studentRepository.findById(studentId);
 	}
+	*/
 
 
 }

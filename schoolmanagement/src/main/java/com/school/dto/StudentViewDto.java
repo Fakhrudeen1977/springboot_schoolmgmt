@@ -1,8 +1,13 @@
 package com.school.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class StudentViewDto {
+public class StudentViewDto implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long studentId;
   	private String studentName;
     private String fatherName;
@@ -22,6 +27,31 @@ public class StudentViewDto {
     private Long religionId;
     private String religionName;
 		
+	public StudentViewDto(Long studentId, String studentName, String fatherName, String motherName, String gender,
+			Date dateOfBirth, Long classId, String className, Long bloodId, String bloodGroupName,
+			String fatherMobileNumber, String motherMobileNumber, String aadharCardNumber, String contactAddress,
+			int photoNumber, String email, Long religionId, String religionName) {
+		super();
+		this.studentId = studentId;
+		this.studentName = studentName;
+		this.fatherName = fatherName;
+		this.motherName = motherName;
+		this.gender = gender;
+		this.dateOfBirth = dateOfBirth;
+		this.classId = classId;
+		this.className = className;
+		this.bloodId = bloodId;
+		this.bloodGroupName = bloodGroupName;
+		this.fatherMobileNumber = fatherMobileNumber;
+		this.motherMobileNumber = motherMobileNumber;
+		this.aadharCardNumber = aadharCardNumber;
+		this.contactAddress = contactAddress;
+		this.photoNumber = photoNumber;
+		this.email = email;
+		this.religionId = religionId;
+		this.religionName = religionName;
+	}
+
 	public StudentViewDto() {
 		
 	}

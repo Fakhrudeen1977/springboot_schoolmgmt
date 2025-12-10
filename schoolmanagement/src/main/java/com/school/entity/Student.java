@@ -1,7 +1,6 @@
 package com.school.entity;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -40,17 +39,14 @@ public class Student implements Serializable{
 	    private String contactAddress;
 	    private int photoNumber;	   
 	    private String email;
-	    
 	    private Long religionId;
 		private String religionName;
-	    
 	    private String imageFileName;
 		private String imageType;
 		private byte[] imageData;	 
 	    private StudentImage studentImage;
-	    
-	    public Student() {
-	    	
+	   	    
+	    public Student() {	    	
 	    }
 	   		
 		
@@ -59,7 +55,6 @@ public class Student implements Serializable{
 		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STUDENT_SEQ")
 		@SequenceGenerator(sequenceName = "Student_seq", allocationSize = 1, name = "STUDENT_SEQ")
 				
-		
 		public Long getStudentId() {
 			return studentId;
 		}
@@ -75,7 +70,7 @@ public class Student implements Serializable{
 			this.studentName = studentName;
 		}
 		
-		@OneToOne(mappedBy="student", cascade = CascadeType.ALL ,fetch=FetchType.LAZY)
+		@OneToOne(mappedBy="student",cascade =CascadeType.ALL,orphanRemoval = true)
 		@JsonManagedReference
 		public StudentImage getStudentImage() {
 			return studentImage;
@@ -84,6 +79,7 @@ public class Student implements Serializable{
 		public void setStudentImage(StudentImage studentImage) {
 			
 			this.studentImage = studentImage;
+			if(studentImage!=null)
 			this.studentImage.setStudent(this);
 			
 		}
@@ -122,8 +118,7 @@ public class Student implements Serializable{
 			this.dateOfBirth = dateOfBirth;
 		}		
 			
-		
-		
+			
 		@Column(name="CONTACT_ADDRESS")
 		public String getContactAddress() {
 			return contactAddress.toUpperCase();
@@ -210,8 +205,29 @@ public class Student implements Serializable{
 		public void setAadharCardNumber(String aadharCardNumber) {
 			this.aadharCardNumber = aadharCardNumber;
 		}
+		
+		@Column(name="RELIGION_ID")
+		public Long getReligionId() {
+			return religionId;
+		}
 
-        @Transient
+
+		public void setReligionId(Long religionId) {
+			this.religionId = religionId;
+		}
+
+		@Column(name="RELIGION_NAME")
+		public String getReligionName() {
+			return religionName;
+		}
+
+
+		public void setReligionName(String religionName) {
+			this.religionName = religionName;
+		}
+
+
+         @Transient
 		public String getImageFileName() {
 			return imageFileName;
 		}
@@ -221,7 +237,7 @@ public class Student implements Serializable{
 			this.imageFileName = imageFileName;
 		}
 
-		 @Transient
+		  @Transient
 		public String getImageType() {
 			return imageType;
 		}
@@ -241,25 +257,8 @@ public class Student implements Serializable{
 			this.imageData = imageData;
 		}
 
+       
 
-		public Long getReligionId() {
-			return religionId;
-		}
-
-
-		public void setReligionId(Long religionId) {
-			this.religionId = religionId;
-		}
-
-
-		public String getReligionName() {
-			return religionName;
-		}
-
-
-		public void setReligionName(String religionName) {
-			this.religionName = religionName;
-		}
 
 
 		
