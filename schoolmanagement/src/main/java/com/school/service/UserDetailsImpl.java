@@ -24,17 +24,24 @@ public class UserDetailsImpl implements UserDetails {
 	private String email;
 	@JsonIgnore
 	private String password;
+	
+	private String imageFileName;
+	private String imageType;
+	private byte[] imageData;
 
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsImpl(Long userId, String name,String username, String email, String password,
-			Collection<? extends GrantedAuthority> authorities) {
+			Collection<? extends GrantedAuthority> authorities,String imageFileName,String imageType,byte[] imageData) {
 		this.userId= userId;
 		this.name=name;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
+		this.imageFileName=imageFileName;
+		this.imageType=imageType;
+		this.imageData=imageData;
 	}
 
 	public static UserDetailsImpl build(User user) {
@@ -44,7 +51,7 @@ public class UserDetailsImpl implements UserDetails {
 		
 		
 		 return new UserDetailsImpl(user.getUserId(),user.getName(), user.getUserName(), 
-			        user.getEmail(), user.getPassword(), authorities);
+			        user.getEmail(), user.getPassword(), authorities,user.getImageFileName(),user.getImageType(),user.getImageData());
 	}
 			  
 
@@ -107,5 +114,29 @@ public class UserDetailsImpl implements UserDetails {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getImageFileName() {
+		return imageFileName;
+	}
+
+	public void setImageFileName(String imageFileName) {
+		this.imageFileName = imageFileName;
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
 	}
 }

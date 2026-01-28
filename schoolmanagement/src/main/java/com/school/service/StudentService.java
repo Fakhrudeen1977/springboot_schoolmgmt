@@ -1,7 +1,6 @@
 package com.school.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -18,9 +17,9 @@ public interface StudentService {
 	public  StudentDto getStudentById(Long studentId) throws StudentIdNotFoundException;	
 	public void deleteByStudentId(Long studentId);
 	
-	//public List<Student> getMaleStudentList();
-	//public List<Student> getFemaleStudentList();
-	//public List<Student> getBirthBabiesList();
+	public List<StudentDto> getMaleStudentList();
+	public List<StudentDto> getFemaleStudentList();
+	public List<StudentDto> getBirthBabiesList();
 	//public  Optional<Student> getImageById(Long studentId);
 	
 	

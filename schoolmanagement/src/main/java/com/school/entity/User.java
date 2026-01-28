@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -33,6 +34,10 @@ public class User implements Serializable {
 	private String email;
 	private String password;
 	private Set<Role> roles = new HashSet<>();
+	
+	private String imageFileName;
+	private String imageType;
+	private byte[] imageData;	
 
 	public User() {
 
@@ -93,6 +98,37 @@ public class User implements Serializable {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	@Column(name = "IMAGE_NAME") 
+	public String getImageFileName() {
+		return imageFileName;
+	}
+
+
+	public void setImageFileName(String imageFileName) {
+		this.imageFileName = imageFileName;
+	}
+
+	@Column(name = "IMAGE_TYPE")
+	public String getImageType() {
+		return imageType;
+	}
+
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+
+	@Lob
+	@Column(name = "IMAGE_DATA")
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
 	}
 
 }

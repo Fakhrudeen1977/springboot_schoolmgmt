@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.school.dto.StudentDto;
 import com.school.dto.StudentImageDto;
 import com.school.exception.PhotoNumberExistException;
-import com.school.exception.StudentIdNotFoundException;
 import com.school.service.StudentService;
 import com.school.util.ImageUtil;
 
@@ -255,41 +253,41 @@ public class StudentController {
 
 	}
 
-	/*@GetMapping("/getMaleStudentList")
-	public ResponseEntity<List<Student>> getMaleStudentList() {
+	@GetMapping("/getMaleStudentList")
+	public ResponseEntity<List<StudentDto>> getMaleStudentList() {
 
 		try {
 			
-			return new ResponseEntity<List<Student>>(studentService.getMaleStudentList(), HttpStatus.OK);
+			return new ResponseEntity<List<StudentDto>>(studentService.getMaleStudentList(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-	}*/
+	}
 
-	/*@GetMapping("/getFemaleStudentList")
-	public ResponseEntity<List<Student>> getFemaleStudentList() {
+	@GetMapping("/getFemaleStudentList")
+	public ResponseEntity<List<StudentDto>> getFemaleStudentList() {
 
 		try {
 			
-			return new ResponseEntity<List<Student>>(studentService.getFemaleStudentList(), HttpStatus.OK);
+			return new ResponseEntity<List<StudentDto>>(studentService.getFemaleStudentList(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-	}*/
+	}
 
-	/*@GetMapping("/getBirthBabiesList")
-	public ResponseEntity<List<Student>> getBirthBabiesList() {
+	@GetMapping("/getBirthBabiesList")
+	public ResponseEntity<List<StudentDto>> getBirthBabiesList() {
 
 		try {
 			
-			return new ResponseEntity<List<Student>>(studentService.getBirthBabiesList(), HttpStatus.OK);
+			return new ResponseEntity<List<StudentDto>>(studentService.getBirthBabiesList(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-	}	*/
+	}	
 	
 	/* @PostMapping("/uploadFile")
 	  public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {

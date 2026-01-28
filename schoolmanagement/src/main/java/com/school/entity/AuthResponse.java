@@ -11,6 +11,11 @@ public class AuthResponse {
 	private String name;	
 	private String refreshToken;
 	
+	
+	private String imageFileName;
+	private String imageType;
+	private byte[] imageData;
+	
 	public String getName() {
 		return name;
 	}
@@ -53,6 +58,25 @@ public class AuthResponse {
 	}
 	public void setRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
+	}
+	
+	public String getImageFileName() {
+		return imageFileName;
+	}
+	public void setImageFileName(String imageFileName) {
+		this.imageFileName = imageFileName;
+	}
+	public String getImageType() {
+		return imageType;
+	}
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+	public byte[] getImageData() {
+		return imageData;
+	}
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
 	}
 
 }

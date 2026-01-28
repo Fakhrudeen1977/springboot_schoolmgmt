@@ -156,31 +156,47 @@ public class StudentServiceImpl implements StudentService{
 				  studentRepository.deleteByStudentId(studentId);		 
 
 }
-	/*
+	
 	@Override
-	public List<Student> getMaleStudentList() {
-		return studentRepository.getMaleStudentList();
+	public List<StudentDto> getMaleStudentList() {
+		//return studentRepository.getMaleStudentList();
+		
+		
+		List<Student> maleStudentList=studentRepository.getMaleStudentList();
+		List<StudentDto> maleStudentListDto=mapper.mapAsList(maleStudentList, StudentDto.class);
+		return maleStudentListDto;
 		
 	}
 	@Override
-	public List<Student> getFemaleStudentList() {
+	public List<StudentDto> getFemaleStudentList() {
 		// TODO Auto-generated method stub
-		return studentRepository.getFemaleStudentList(); 
-	}
-	
-	@Override
-	public List<Student> getBirthBabiesList() {
+		//return studentRepository.getFemaleStudentList(); 
 		
-		return studentRepository.getBirthBabiesList();
+		List<Student> femaleStudentList=studentRepository.getMaleStudentList();
+		List<StudentDto> femaleStudentListDto=mapper.mapAsList(femaleStudentList, StudentDto.class);
+		return femaleStudentListDto;
 		
 	}
 	
+	
 	@Override
+	public List<StudentDto> getBirthBabiesList() {
+		
+		//return studentRepository.getBirthBabiesList();
+		
+
+		List<Student> getBirthDayList=studentRepository.getMaleStudentList();
+		List<StudentDto> getBirthDayListDto=mapper.mapAsList(getBirthDayList, StudentDto.class);
+		return getBirthDayListDto;
+		
+	}
+	
+	/*@Override
 	public Optional<Student> getImageById(Long studentId) {
 		// TODO Auto-generated method stub
 		return studentRepository.findById(studentId);
-	}
-	*/
+	}*/
+	
 
 
 }
