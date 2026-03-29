@@ -1,7 +1,12 @@
-FROM openjdk:8               
-EXPOSE 8000                   
-ADD target/schoolmanagement-0.0.1-SNAPSHOT.jar schoolmanagement-0.0.1-SNAPSHOT.jar 
-ENTRYPOINT ["java","-jar","/schoolmanagement-0.0.1-SNAPSHOT.jar"]             
+FROM openjdk:8u201-jdk-alpine
+VOLUME /tmp                
+EXPOSE 8000                
+ADD target/schoolmanagement.jar schoolmanagement.jar 
+ENTRYPOINT ["java","-jar","/schoolmanagement.jar"]  
+
+
+
+
 
 
 

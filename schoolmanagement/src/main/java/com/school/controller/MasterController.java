@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.school.dto.BloodGroupDto;
 import com.school.dto.ClassDetailsDto;
+import com.school.dto.ReligionDto;
 import com.school.dto.UserDto;
 import com.school.entity.ClassDetails;
 import com.school.entity.Role;
@@ -69,6 +72,19 @@ public class MasterController {
 		return ResponseEntity.ok(bloodGroupDtoList);
 	}
 
+	@GetMapping("/getReligionList")
+	public ResponseEntity<List<ReligionDto>> getReligionList() {
+		
+	
+		List<ReligionDto> religionDtoList = masterService.getReligionList();
+		System.out.println("Length of Religion List"+" "+religionDtoList.size());
+		return ResponseEntity.ok(religionDtoList);
+	}
+	
+	
+	
+	
+	
 	@PostMapping("/saveClassDetail")
 	public ResponseEntity<ClassDetailsDto> saveClassDetail(@RequestBody ClassDetailsDto classDetailsDto) {
 		ClassDetailsDto savedClassDetailsDto = new ClassDetailsDto();
@@ -92,11 +108,18 @@ public class MasterController {
 	}
 
 	@GetMapping("/getClassDetailList")
-	public ResponseEntity<List<ClassDetails>> getClassDetailList() {
+	public ResponseEntity<Page<ClassDetails>> getClassDetailList(@RequestParam String pageNo , @RequestParam String perPage) {
+		
+			
+		 Page<ClassDetails> list =masterService.getClassDetailList(Integer.parseInt(pageNo),Integer.parseInt(perPage));
 
-		List<ClassDetails> classDetailList = masterService.getClassDetailList();
-		return ResponseEntity.ok(classDetailList);
+		 return ResponseEntity.ok(list);
+	
+	
 	}
+	
+	
+	
 
 	@DeleteMapping("/deleteBloodGroupId/{bloodGroupId}")
 	public ResponseEntity<String> deleteBloodGroupId(@PathVariable Long bloodGroupId) {

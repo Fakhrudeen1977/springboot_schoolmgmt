@@ -15,6 +15,10 @@ public class UserDto implements Serializable {
 	private String password;
 	private Set<Role> roles = new HashSet<>();
 	
+	private String imageFileName;
+	private String imageType;
+	private byte[] imageData;	
+	
 	public UserDto() {
 		
 	}
@@ -53,6 +57,24 @@ public class UserDto implements Serializable {
 	}
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+	public String getImageFileName() {
+		return imageFileName;
+	}
+	public void setImageFileName(String imageFileName) {
+		this.imageFileName = imageFileName;
+	}
+	public String getImageType() {
+		return imageType;
+	}
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+	public byte[] getImageData() {
+		return imageData;
+	}
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
 	}
 
 }

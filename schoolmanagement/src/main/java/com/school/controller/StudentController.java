@@ -3,10 +3,8 @@ package com.school.controller;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.school.dto.StudentDto;
-import com.school.dto.StudentViewDto;
-import com.school.entity.Student;
+import com.school.dto.StudentImageDto;
 import com.school.exception.PhotoNumberExistException;
-import com.school.exception.StudentNotFoundException;
-import com.school.service.ExcelService;
 import com.school.service.StudentService;
-import com.school.util.ExcelUtility;
 import com.school.util.ImageUtil;
 
 @RestController
@@ -40,29 +34,42 @@ import com.school.util.ImageUtil;
 public class StudentController {
 
 	@Autowired
-	private StudentService studentService;
+	private StudentService studentService;	
 	
-	@Autowired
-	ExcelService excelService;
-
 	private static final Logger logger = LoggerFactory.getLogger(StudentController.class); 
 	
 	@PostMapping("/saveStudent")
-	public ResponseEntity<StudentDto> saveStudent(@RequestParam String studentName, @RequestParam String fatherName,
-			@RequestParam String gender, @RequestParam String dateOfBirth, @RequestParam Long classId,
+	public ResponseEntity<StudentDto> saveStudent(
+			@RequestParam String studentName,
+			@RequestParam String fatherName,
+			@RequestParam String motherName,
+			@RequestParam String gender,
+			@RequestParam String dateOfBirth, 
+			@RequestParam Long classId,
 			@RequestParam String className,
 			@RequestParam Long bloodId,
+			@RequestParam Long religionId,
+			@RequestParam String religionName,
 			@RequestParam String bloodGroupName,
-			@RequestParam String mobileNumber, @RequestParam String contactAddress,
-			@RequestParam int photoNumber, @RequestParam("file") MultipartFile file) throws IOException,PhotoNumberExistException {
+			@RequestParam String fatherMobileNumber, 
+			@RequestParam String motherMobileNumber, 
+			@RequestParam String aadharCardNumber, 
+			@RequestParam String contactAddress,
+			@RequestParam String email,
+			@RequestParam int photoNumber,
+			@RequestParam("file") MultipartFile file) throws IOException,PhotoNumberExistException {
 
 		
-		StudentDto savedStudentDto = new StudentDto();
+		logger.info("SaveStudent End point called");
+		System.out.println("Save Controller called"+" "+file.getContentType()+" "+file.getOriginalFilename());
+		
+		StudentDto savedStudentDto = new StudentDto();		
+		StudentImageDto savedStudentImageDto=new StudentImageDto();
 		Date dob = null;
-		System.out.println("Saved Student called"+" "+dateOfBirth);
+		
 		char c=bloodGroupName.charAt(bloodGroupName.length()-1);
 		String str=String.valueOf(c);
-		
+
 		
 		if(str.equalsIgnoreCase("-")){
 			
@@ -71,25 +78,38 @@ public class StudentController {
 			bloodGroupName=bloodGroupName.trim()+"+";
 		}			
 		
-		savedStudentDto.setStudentName(studentName);
-		savedStudentDto.setFatherName(fatherName);
-		savedStudentDto.setGender(gender);
+		logger.info("Saved Student called"+" "+dateOfBirth);
+		
+		savedStudentDto.setStudentName(studentName.toUpperCase());
+		savedStudentDto.setFatherName(fatherName.toUpperCase());
+		
+		savedStudentDto.setMotherName(motherName.toUpperCase());
+		savedStudentDto.setGender(gender.toUpperCase());
 		savedStudentDto.setClassId(classId);
-		savedStudentDto.setClassName(className);
+		savedStudentDto.setClassName(className.toUpperCase());
 		savedStudentDto.setBloodId(bloodId);
 		savedStudentDto.setBloodGroupName(bloodGroupName);
-		savedStudentDto.setMobileNumber(mobileNumber);
+		savedStudentDto.setFatherMobileNumber(fatherMobileNumber);
+		savedStudentDto.setMotherMobileNumber(motherMobileNumber);
+		savedStudentDto.setAadharCardNumber(aadharCardNumber);
 		savedStudentDto.setContactAddress(contactAddress);
 		savedStudentDto.setPhotoNumber(photoNumber);		
+		savedStudentDto.setEmail(email);		
+		savedStudentDto.setReligionId(religionId);
+		savedStudentDto.setReligionName(religionName.toUpperCase());
+					
+		savedStudentImageDto.setImageFileName(file.getOriginalFilename());
+		savedStudentImageDto.setImageType(file.getContentType());
+		savedStudentImageDto.setImageData(ImageUtil.compressImage(file.getBytes()));
 		
-		savedStudentDto.setImageFileName(file.getOriginalFilename());
-		savedStudentDto.setImageType(file.getContentType());
-		savedStudentDto.setImageData(ImageUtil.compressImage(file.getBytes()));
+		savedStudentDto.setStudentImage(savedStudentImageDto);
+		
+		
 		try {
 			
 			dob = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirth);
 			
-			savedStudentDto.setDateOfBirth(dob);
+			savedStudentDto.setDateOfBirth(dob);			
 						 
 			savedStudentDto = studentService.saveStudent(savedStudentDto);	
 			
@@ -103,23 +123,35 @@ public class StudentController {
 	}	
 	
 	@PostMapping("/updateStudent")
-	public ResponseEntity<StudentDto> updateStudent(@RequestParam Long studentId,@RequestParam String studentName, @RequestParam String fatherName,
-			@RequestParam String gender, @RequestParam String dateOfBirth,@RequestParam Long classId,
+	public ResponseEntity<StudentDto> updateStudent(
+			@RequestParam Long studentId,
+			@RequestParam String studentName, 
+			@RequestParam String fatherName,
+			@RequestParam String motherName,
+			@RequestParam String gender, 
+			@RequestParam String dateOfBirth,
+			@RequestParam Long classId,
 			@RequestParam String className,
 			@RequestParam Long bloodId,
 			@RequestParam String bloodGroupName,
-			@RequestParam String mobileNumber, @RequestParam String contactAddress,
-			@RequestParam int photoNumber, @RequestParam("file") MultipartFile file) throws IOException,PhotoNumberExistException {
+			@RequestParam Long religionId,
+			@RequestParam String religionName,
+			@RequestParam String fatherMobileNumber, 
+			@RequestParam String motherMobileNumber, 
+			@RequestParam String aadharCardNumber, 
+			@RequestParam String contactAddress,
+			@RequestParam String email,
+			@RequestParam int photoNumber,
+			@RequestParam("file") MultipartFile file) throws IOException,PhotoNumberExistException {
 
 		System.out.println("Update Student called"+" "+dateOfBirth);
 		StudentDto savedStudentDto = new StudentDto();
-		Date dob = null;		
+		StudentImageDto savedStudentImageDto=new StudentImageDto();
+		Date dob = null;	
 		
 		char c=bloodGroupName.charAt(bloodGroupName.length()-1);
-		System.out.println("Character"+" +c");
 		String str=String.valueOf(c);
-		System.out.println("String "+" "+str);
-		
+
 		
 		if(str.equalsIgnoreCase("-")){
 			
@@ -127,22 +159,30 @@ public class StudentController {
 		else {
 			bloodGroupName=bloodGroupName.trim()+"+";
 		}			
-		
+				
 		savedStudentDto.setStudentId(studentId);
 		savedStudentDto.setStudentName(studentName);
 		savedStudentDto.setFatherName(fatherName);
+		savedStudentDto.setMotherName(motherName);
 		savedStudentDto.setGender(gender);
 		savedStudentDto.setClassId(classId);
 		savedStudentDto.setClassName(className);
+		savedStudentDto.setReligionId(religionId);
+		savedStudentDto.setReligionName(religionName);
 		savedStudentDto.setBloodId(bloodId);
 		savedStudentDto.setBloodGroupName(bloodGroupName);
-		savedStudentDto.setMobileNumber(mobileNumber);
+		savedStudentDto.setFatherMobileNumber(fatherMobileNumber);
+		savedStudentDto.setMotherMobileNumber(motherMobileNumber);
+		savedStudentDto.setAadharCardNumber(aadharCardNumber);
 		savedStudentDto.setContactAddress(contactAddress);
 		savedStudentDto.setPhotoNumber(photoNumber);		
+		savedStudentDto.setEmail(email);
 		
-		savedStudentDto.setImageFileName(file.getOriginalFilename());
-		savedStudentDto.setImageType(file.getContentType());
-		savedStudentDto.setImageData(ImageUtil.compressImage(file.getBytes()));
+		savedStudentImageDto.setImageFileName(file.getOriginalFilename());
+		savedStudentImageDto.setImageType(file.getContentType());
+		savedStudentImageDto.setImageData(ImageUtil.compressImage(file.getBytes()));
+		
+		savedStudentDto.setStudentImage(savedStudentImageDto);
 		try {
 			
 			dob = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirth);
@@ -162,86 +202,48 @@ public class StudentController {
 	
 	
 	@GetMapping("/getStudentList")
-	public ResponseEntity<List<StudentViewDto>> getStudentList() {
-
+	public ResponseEntity<List<StudentDto>> getStudentList() {
 		try {
-			   
-				StudentViewDto studentViewDto=null;
+			    System.out.println("Student List Viewed");					
 				List<StudentDto> studentDtoList=studentService.getStudentList();
-				
-				List<StudentViewDto> studentViewDtoList=new ArrayList<StudentViewDto>();
-				System.out.println("Student Count"+" "+studentDtoList.size());
-				
-				
-				for(StudentDto studentDto: studentDtoList ) {
+							
+				for(StudentDto studentDto:studentDtoList) {									
 					
-					studentViewDto=new StudentViewDto();
-					studentViewDto.setStudentId(studentDto.getStudentId());
-					studentViewDto.setStudentName(studentDto.getStudentName());
-					studentViewDto.setFatherName(studentDto.getFatherName());
-					studentViewDto.setGender(studentDto.getGender());
-					studentViewDto.setDateOfBirth(studentDto.getDateOfBirth());
-					studentViewDto.setClassId(studentDto.getClassId());
-					studentViewDto.setClassName(studentDto.getClassName());
-					studentViewDto.setBloodId(studentDto.getBloodId());
-					studentViewDto.setBloodGroupName(studentDto.getBloodGroupName().trim());
-					studentViewDto.setMobileNumber(studentDto.getMobileNumber());
-					studentViewDto.setContactAddress(studentDto.getContactAddress());
-					studentViewDto.setPhotoNumber(studentDto.getPhotoNumber());		
-					
-					studentViewDto.setImageFileName(studentDto.getImageFileName());
-					studentViewDto.setImageType(studentDto.getImageType());
-					studentViewDto.setImageData(ImageUtil.decompressImage(studentDto.getImageData()));
-					
-					studentViewDtoList.add(studentViewDto);
-					
+					studentDto.getStudentImage().setImageData(ImageUtil.decompressImage(studentDto.getStudentImage().getImageData()));
+									
 				}
+							
 				
-			return new ResponseEntity<List<StudentViewDto>>(studentViewDtoList, HttpStatus.OK);
+				if(studentDtoList.size()==0) {
+					return new ResponseEntity<List<StudentDto>>(studentDtoList, HttpStatus.NO_CONTENT);
+				}
+						
+				
+				
+			return new ResponseEntity<List<StudentDto>>(studentDtoList, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
-	@GetMapping("/getStudentById/{studentId}")
-	public ResponseEntity<StudentViewDto> getStudentById(@PathVariable Long studentId) {
-
-		try {
-			
-			Optional<StudentDto> studentDto=studentService.getStudentById(studentId);
-			
-			StudentViewDto studentViewDto=new StudentViewDto();
-			studentViewDto.setStudentId(studentDto.get().getStudentId());
-			studentViewDto.setStudentName(studentDto.get().getStudentName());
-			studentViewDto.setFatherName(studentDto.get().getFatherName());
-			studentViewDto.setGender(studentDto.get().getGender());
-			studentViewDto.setDateOfBirth(studentDto.get().getDateOfBirth());
-			studentViewDto.setClassId(studentDto.get().getClassId());
-			studentViewDto.setClassName(studentDto.get().getClassName());
-			studentViewDto.setBloodId(studentDto.get().getBloodId());
-			studentViewDto.setBloodGroupName(studentDto.get().getBloodGroupName().trim());
-			studentViewDto.setMobileNumber(studentDto.get().getMobileNumber());
-			studentViewDto.setContactAddress(studentDto.get().getContactAddress());
-			studentViewDto.setPhotoNumber(studentDto.get().getPhotoNumber());		
-			
-			studentViewDto.setImageFileName(studentDto.get().getImageFileName());
-			studentViewDto.setImageType(studentDto.get().getImageType());
-			studentViewDto.setImageData(ImageUtil.decompressImage(studentDto.get().getImageData()));
-					
-			
-			//return new ResponseEntity<StudentDto>(studentService.getStudentById(studentId), HttpStatus.OK);
-			return new ResponseEntity<StudentViewDto>(studentViewDto, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	@GetMapping("/getStudentById/{studentId}") 
+	public ResponseEntity<StudentDto> getStudentById(@PathVariable Long studentId){
+	   
+	    	StudentDto studenDto=studentService.getStudentById(studentId);		
+			return new ResponseEntity<StudentDto>(studenDto, HttpStatus.OK);		
+	  
 
 	}	
+		
 	
-	
+	/*@GetMapping("/test")
+	public String test() {
+		throw new StudentIdNotFoundException("Student");
+	}*/
 
 	@DeleteMapping("/deleteByStudentId/{studentId}")
-	public ResponseEntity<String> deleteByStudentId(@PathVariable Long studentId) throws StudentNotFoundException {
+	public ResponseEntity<String> deleteByStudentId(@PathVariable Long studentId)  {
 
 		ResponseEntity<String> resp = null;
 		studentService.deleteByStudentId(studentId);		
@@ -252,11 +254,11 @@ public class StudentController {
 	}
 
 	@GetMapping("/getMaleStudentList")
-	public ResponseEntity<List<Student>> getMaleStudentList() {
+	public ResponseEntity<List<StudentDto>> getMaleStudentList() {
 
 		try {
 			
-			return new ResponseEntity<List<Student>>(studentService.getMaleStudentList(), HttpStatus.OK);
+			return new ResponseEntity<List<StudentDto>>(studentService.getMaleStudentList(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -264,11 +266,11 @@ public class StudentController {
 	}
 
 	@GetMapping("/getFemaleStudentList")
-	public ResponseEntity<List<Student>> getFemaleStudentList() {
+	public ResponseEntity<List<StudentDto>> getFemaleStudentList() {
 
 		try {
 			
-			return new ResponseEntity<List<Student>>(studentService.getFemaleStudentList(), HttpStatus.OK);
+			return new ResponseEntity<List<StudentDto>>(studentService.getFemaleStudentList(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -276,18 +278,18 @@ public class StudentController {
 	}
 
 	@GetMapping("/getBirthBabiesList")
-	public ResponseEntity<List<Student>> getBirthBabiesList() {
+	public ResponseEntity<List<StudentDto>> getBirthBabiesList() {
 
 		try {
 			
-			return new ResponseEntity<List<Student>>(studentService.getBirthBabiesList(), HttpStatus.OK);
+			return new ResponseEntity<List<StudentDto>>(studentService.getBirthBabiesList(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}	
 	
-	 @PostMapping("/uploadFile")
+	/* @PostMapping("/uploadFile")
 	  public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
 	    String message = "";
 
@@ -305,7 +307,39 @@ public class StudentController {
 
 	    message = "Please upload an excel file!";
 	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-	 }
+	 }*/
+	
+	
+	
+	
+	/*for(StudentDto studentDto: studentDtoList ) {
+	
+	studentViewDto=new StudentViewDto();
+	studentViewDto.setStudentId(studentDto.getStudentId());
+	studentViewDto.setStudentName(studentDto.getStudentName());
+	studentViewDto.setFatherName(studentDto.getFatherName());
+	studentViewDto.setMotherName(studentDto.getMotherName());
+	studentViewDto.setGender(studentDto.getGender());
+	studentViewDto.setDateOfBirth(studentDto.getDateOfBirth());
+	studentViewDto.setClassId(studentDto.getClassId());
+	studentViewDto.setClassName(studentDto.getClassName());
+	studentViewDto.setBloodId(studentDto.getBloodId());
+	studentViewDto.setBloodGroupName(studentDto.getBloodGroupName().trim());
+	studentViewDto.setFatherMobileNumber(studentDto.getFatherMobileNumber());
+	studentViewDto.setMotherMobileNumber(studentDto.getMotherMobileNumber());
+	studentViewDto.setContactAddress(studentDto.getContactAddress());
+	studentViewDto.setAadharCardNumber(studentDto.getAadharCardNumber());
+	studentViewDto.setPhotoNumber(studentDto.getPhotoNumber());		
+	studentViewDto.setEmail(studentDto.getEmail());
+	studentViewDto.setReligionId(studentDto.getReligionId());
+	studentViewDto.setReligionName(studentDto.getReligionName());
+	
+	
+	studentViewDtoList.add(studentViewDto);
+	
+}*/
+	
+	
 	
 
 }

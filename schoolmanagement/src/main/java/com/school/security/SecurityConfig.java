@@ -58,9 +58,8 @@ public class SecurityConfig  {
 			
 			.authorizeRequests()
 			.antMatchers("/auth/**").permitAll()
-			.antMatchers("/test/**").permitAll()
-			
-			.antMatchers(HttpMethod.GET, "/user/allusers").permitAll()
+			.antMatchers(HttpMethod.GET, "/api/**").permitAll()
+						
 			.antMatchers("/master/**").permitAll()
 			.antMatchers(HttpMethod.DELETE, "/master/deleteBloodGroupId").hasAuthority("Admin")
 			.antMatchers(HttpMethod.POST, "/master/**").permitAll()

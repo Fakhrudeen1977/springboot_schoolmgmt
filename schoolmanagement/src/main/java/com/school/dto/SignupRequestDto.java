@@ -14,7 +14,9 @@ public class SignupRequestDto implements Serializable{
 	private String email;
 	private String password;	
 	private String[] roles;
-	
+	private String imageFileName;
+	private String imageType;
+	private byte[] imageData;	
 		
 	public SignupRequestDto() {
 		
@@ -58,6 +60,30 @@ public class SignupRequestDto implements Serializable{
 
 	public void setRoles(String[] roles) {
 		this.roles = roles;
+	}
+
+	public String getImageFileName() {
+		return imageFileName;
+	}
+
+	public void setImageFileName(String imageFileName) {
+		this.imageFileName = imageFileName;
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
 	}
 
 	

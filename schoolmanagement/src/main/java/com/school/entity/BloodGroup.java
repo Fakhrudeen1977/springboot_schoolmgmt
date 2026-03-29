@@ -41,7 +41,7 @@ public class BloodGroup implements Serializable {
 	}
 	
 
-	@Column(name="Blood_Name")
+	@Column(name="BLOODGRP_NAME")
 	public String getBloodGroupName() {
 		return bloodGroupName;
 	}

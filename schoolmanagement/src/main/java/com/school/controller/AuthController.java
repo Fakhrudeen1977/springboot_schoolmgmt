@@ -1,5 +1,6 @@
 package com.school.controller;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.school.dto.SignupRequestDto;
+import com.school.dto.UserDto;
 import com.school.entity.AuthResponse;
 import com.school.entity.RefreshToken;
 import com.school.entity.Role;
@@ -30,8 +33,10 @@ import com.school.repository.RoleRepository;
 import com.school.repository.UserRepository;
 import com.school.security.JwtTokenUtil;
 import com.school.security.TokenRefreshRequest;
+import com.school.service.AuthService;
 import com.school.service.RefreshTokenService;
 import com.school.service.UserDetailsImpl;
+import com.school.util.ImageUtil;
 
 @RestController
 @RequestMapping("/auth")
@@ -55,6 +60,9 @@ public class AuthController {
 
 	@Autowired
 	private RefreshTokenService refreshTokenService;
+	
+	@Autowired
+	private AuthService authService;	
 
 	public static List<String> roleList;
 
@@ -77,7 +85,7 @@ public class AuthController {
 				.collect(Collectors.toList());
 
 		roleList = roles;
-		System.out.println("Role List" + " " + roleList.get(0) + " " + roleList.get(1));
+		//System.out.println("Role List" + " " + roleList.get(0) + " " + roleList.get(1));
 
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getUserId());
 		System.out.println(refreshToken.getToken());
@@ -91,6 +99,8 @@ public class AuthController {
 		authResponse.setPassword(userDetails.getPassword());
 		authResponse.setEmail(userDetails.getEmail());
 		authResponse.setRefreshToken(refreshToken.getToken());
+		authResponse.setImageData(ImageUtil.decompressImage(userDetails.getImageData()));
+			
 
 		return ResponseEntity.ok(authResponse);
 	}
@@ -122,61 +132,40 @@ public class AuthController {
 
 	}
 
-	@PostMapping("/signup")
-	public ResponseEntity<?> userSignup(@RequestBody SignupRequestDto signupRequest) {
-
-		Set<Role> roles = new HashSet<>();
-		if (userRepository.existsByUserName(signupRequest.getUserName())) {
+	@PostMapping("/userSignup")
+	//public ResponseEntity<?> userSignup(@RequestBody SignupRequestDto signupRequest) {
+		
+	public ResponseEntity<?> userSignup(
+			@RequestParam String name,
+			@RequestParam String userName,
+			@RequestParam String password,
+			@RequestParam String email,
+			@RequestParam String[] role,
+			@RequestParam("file") MultipartFile file)  throws IOException{
+			
+		
+		if (userRepository.existsByUserName(userName)) {
 			return ResponseEntity.badRequest().body("Username is already taken");
 		}
-		if (userRepository.existsByEmail(signupRequest.getEmail())) {
+		if (userRepository.existsByEmail(email)) {
 			return ResponseEntity.badRequest().body("Email is already taken");
+						
 		}
-		User user = new User();
-		user.setName(signupRequest.getName());
-		user.setUserName(signupRequest.getUserName());
-		user.setEmail(signupRequest.getEmail());
-		user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-
-		String[] roleArr = signupRequest.getRoles();
-
-		if (roleArr == null) {
-
-			roles.add(roleRepository.findByRoleName("User"));
-		}
-
-		for (String role : roleArr) {
-
-			switch (role) {
-			case "Admin": {
-
-				roles.add(roleRepository.findByRoleName("Admin"));
-
-				break;
-			}
-
-			case "HR": {
-
-				roles.add(roleRepository.findByRoleName("HR"));
-
-				break;
-			}
-			case "User": {
-
-				roles.add(roleRepository.findByRoleName("User"));
-				break;
-			}
-
-			default:
-				return ResponseEntity.badRequest().body("Specified role not found");
-			}
-			System.out.println("Inside Loop");
-		}
-
-		user.setRoles(roles);
-
-		return new ResponseEntity<User>(userRepository.save(user), HttpStatus.CREATED);
-
+		
+		UserDto userDto=new UserDto();		
+		userDto.setName(name);
+		userDto.setUserName(userName);
+		userDto.setEmail(email);
+		userDto.setPassword(passwordEncoder.encode(password));
+		
+		userDto.setImageFileName(file.getOriginalFilename());
+		userDto.setImageType(file.getContentType());
+		userDto.setImageData(ImageUtil.compressImage(file.getBytes()));
+	    
+		userDto = authService.saveUser(userDto,role);	
+		
+		return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
+	  
+		
 	}
-
 }
