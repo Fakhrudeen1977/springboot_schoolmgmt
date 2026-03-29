@@ -80,13 +80,13 @@ public class StudentController {
 		
 		logger.info("Saved Student called"+" "+dateOfBirth);
 		
-		savedStudentDto.setStudentName(studentName);
-		savedStudentDto.setFatherName(fatherName);
+		savedStudentDto.setStudentName(studentName.toUpperCase());
+		savedStudentDto.setFatherName(fatherName.toUpperCase());
 		
-		savedStudentDto.setMotherName(motherName);
-		savedStudentDto.setGender(gender);
+		savedStudentDto.setMotherName(motherName.toUpperCase());
+		savedStudentDto.setGender(gender.toUpperCase());
 		savedStudentDto.setClassId(classId);
-		savedStudentDto.setClassName(className);
+		savedStudentDto.setClassName(className.toUpperCase());
 		savedStudentDto.setBloodId(bloodId);
 		savedStudentDto.setBloodGroupName(bloodGroupName);
 		savedStudentDto.setFatherMobileNumber(fatherMobileNumber);
@@ -96,7 +96,7 @@ public class StudentController {
 		savedStudentDto.setPhotoNumber(photoNumber);		
 		savedStudentDto.setEmail(email);		
 		savedStudentDto.setReligionId(religionId);
-		savedStudentDto.setReligionName(religionName);
+		savedStudentDto.setReligionName(religionName.toUpperCase());
 					
 		savedStudentImageDto.setImageFileName(file.getOriginalFilename());
 		savedStudentImageDto.setImageType(file.getContentType());

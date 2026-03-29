@@ -143,8 +143,8 @@ public class AuthController {
 			@RequestParam String[] role,
 			@RequestParam("file") MultipartFile file)  throws IOException{
 			
-		Set<Role> roles = new HashSet<>();
-		if (userRepository.existsByUserName(name)) {
+		
+		if (userRepository.existsByUserName(userName)) {
 			return ResponseEntity.badRequest().body("Username is already taken");
 		}
 		if (userRepository.existsByEmail(email)) {
@@ -167,55 +167,5 @@ public class AuthController {
 		return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
 	  
 		
-		/*User user = new User();
-		user.setName(name);
-		user.setUserName(userName);
-		user.setEmail(email);
-		user.setPassword(passwordEncoder.encode(password));
-		
-		user.setImageFileName(file.getOriginalFilename());
-		user.setImageType(file.getContentType());
-		user.setImageData(ImageUtil.compressImage(file.getBytes()));
-        */
-		/*String[] roleArr = userrole;
-
-		if (roleArr == null) {
-
-			roles.add(roleRepository.findByRoleName("User"));
-		}
-
-		for (String role : roleArr) {
-
-			switch (role) {
-			case "Admin": {
-
-				roles.add(roleRepository.findByRoleName("Admin"));
-
-				break;
-			}
-
-			case "HR": {
-
-				roles.add(roleRepository.findByRoleName("HR"));
-
-				break;
-			}
-			case "User": {
-
-				roles.add(roleRepository.findByRoleName("User"));
-				break;
-			}
-
-			default:
-				return ResponseEntity.badRequest().body("Specified role not found");
-			}
-			System.out.println("Inside Loop");
-		}
-
-		user.setRoles(roles);
-
-		return new ResponseEntity<User>(userRepository.save(user), HttpStatus.CREATED);*/
-
 	}
-
 }
