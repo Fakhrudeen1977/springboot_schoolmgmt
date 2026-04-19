@@ -5,9 +5,13 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
+import com.school.SchoolmanagementApplication;
 import com.school.dto.StudentDto;
 import com.school.entity.Student;
 import com.school.entity.StudentImage;
@@ -20,10 +24,11 @@ import com.school.repository.StudentRepository;
 public class StudentServiceImpl implements StudentService{
  
 
+	private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
+	
 	@Autowired
 	private StudentRepository studentRepository;
-	
-	
+		
 	@Autowired
 	private OrikaBeanMapper mapper;
 	
@@ -34,6 +39,7 @@ public class StudentServiceImpl implements StudentService{
 	@Transactional
 	public StudentDto saveStudent(StudentDto studentDto) throws PhotoNumberExistException  {
 		
+		logger.info("Student Information saved successfully");
 		
 		StudentDto savedDto=null;			
 		Student student= mapper.map(studentDto, Student.class);				
@@ -56,6 +62,7 @@ public class StudentServiceImpl implements StudentService{
 	@Transactional
 	public StudentDto updateStudent(StudentDto studentDto) throws PhotoNumberExistException  {
 		
+		logger.info("Student Information updated successfully");
 		
 		StudentDto savedDto=null;				
 		Student student= mapper.map(studentDto, Student.class);		
@@ -92,7 +99,7 @@ public class StudentServiceImpl implements StudentService{
 	
 	
 	public boolean checkPhotoNumberExistOrNot(int photoNumber) {
-		System.out.println("Photo Number displayed"+" "+photoNumber);
+		
 		int result=0;
 		boolean isFlag=false;
 		result=studentRepository.countByPhotoNumber(photoNumber);
@@ -111,12 +118,9 @@ public class StudentServiceImpl implements StudentService{
 	
 	@Override
 	public List<StudentDto> getStudentList() {				
-		System.out.println("Reached GetStudent List");
-		//List<StudentViewDto> studentList=studentRepository.getStudentList();	
-		
-		List<Student> studentList=studentRepository.findAll();
-		//StudentDto savedDto  = mapper.map(studentList, StudentDto.class);
-		
+		logger.info("Student Informations fetched  successfully");
+					
+		List<Student> studentList=studentRepository.findAll(Sort.by("studentId").descending());
 		List<StudentDto> savedDto=mapper.mapAsList(studentList, StudentDto.class);
 		return savedDto;
 		
@@ -159,9 +163,7 @@ public class StudentServiceImpl implements StudentService{
 	
 	@Override
 	public List<StudentDto> getMaleStudentList() {
-		//return studentRepository.getMaleStudentList();
-		
-		
+				
 		List<Student> maleStudentList=studentRepository.getMaleStudentList();
 		List<StudentDto> maleStudentListDto=mapper.mapAsList(maleStudentList, StudentDto.class);
 		return maleStudentListDto;
@@ -169,10 +171,8 @@ public class StudentServiceImpl implements StudentService{
 	}
 	@Override
 	public List<StudentDto> getFemaleStudentList() {
-		// TODO Auto-generated method stub
-		//return studentRepository.getFemaleStudentList(); 
-		
-		List<Student> femaleStudentList=studentRepository.getMaleStudentList();
+				
+		List<Student> femaleStudentList=studentRepository.getFemaleStudentList();
 		List<StudentDto> femaleStudentListDto=mapper.mapAsList(femaleStudentList, StudentDto.class);
 		return femaleStudentListDto;
 		
@@ -182,10 +182,7 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public List<StudentDto> getBirthBabiesList() {
 		
-		//return studentRepository.getBirthBabiesList();
-		
-
-		List<Student> getBirthDayList=studentRepository.getMaleStudentList();
+		List<Student> getBirthDayList=studentRepository.getBirthBabiesList();
 		List<StudentDto> getBirthDayListDto=mapper.mapAsList(getBirthDayList, StudentDto.class);
 		return getBirthDayListDto;
 		

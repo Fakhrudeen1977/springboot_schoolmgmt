@@ -7,7 +7,7 @@ public class Querys {
 
 	public static final String FIND_ALL_STUDENTS="SELECT new com.school.dto.StudentViewDto(s.studentId,s.studentName,s.fatherName,s.motherName,s.gender,s.dateOfBirth,"+
 			 "s.classId,s.className,s.bloodId,s.bloodGroupName,s.fatherMobileNumber,s.motherMobileNumber,s.aadharCardNumber,"+
-			 "s.contactAddress,s.photoNumber,s.email,s.religionId, s.religionName) from Student s ";
+			 "s.contactAddress,s.photoNumber,s.email,s.religionId, s.religionName) from Student s  order by s.studentId";
 			
 			
 		
