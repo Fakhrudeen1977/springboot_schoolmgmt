@@ -6,9 +6,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity
+@EnableWebSecurity
 public class SecurityConfig  {
 	
 	@Autowired
@@ -27,12 +26,12 @@ public class SecurityConfig  {
 	private JwtAuthenticationEntryPoint authenticationEntryPoint;
 		
 	
-	@Bean
+	
 	  public JwtAuthTokenFilter authenticationJwtTokenFilter() {
 	    return new JwtAuthTokenFilter();
 	  }
 
-	  @Bean
+	@Bean
 	  public DaoAuthenticationProvider authenticationProvider() {
 	      DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 	       
@@ -42,7 +41,7 @@ public class SecurityConfig  {
 	      return authProvider;
 	  }
 	  
-	  @Bean
+	 
 	  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
 	    return authConfig.getAuthenticationManager();
 	  }
@@ -50,13 +49,15 @@ public class SecurityConfig  {
 	  @Bean
 	  public PasswordEncoder passwordEncoder() {
 	    return new BCryptPasswordEncoder();
-	  }	@Bean
-	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-		http
-			 .csrf().disable()    //Disabling CSRF as not using form based login
-			
-			.authorizeRequests()
+	  }
+	  @Bean
+	protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		  
+		  http
+	      // Disable CSRF for this example (not recommended for production web apps)
+	      .csrf(csrf -> csrf.disable())
+		    
+		  .authorizeHttpRequests(auth -> auth
 			.antMatchers("/auth/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/api/**").permitAll()
 						
@@ -71,26 +72,19 @@ public class SecurityConfig  {
 			.antMatchers(HttpMethod.POST, "/student/**").permitAll()
 					
 			.anyRequest().authenticated()
+			
+			 )
+		  .authenticationProvider(authenticationProvider())
+	       .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+			
+	      
+		  return http.build(); 
 		
-			 .and()
-	            .formLogin().permitAll()
-	            .and()
-	            .logout().permitAll()
-			.and()
-			.exceptionHandling()
-			.authenticationEntryPoint(authenticationEntryPoint)
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			//To Verify user from second request onwards............
-			.and()
-			.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-			 http.authenticationProvider(authenticationProvider());
-
-		
-		return http.build();
-				}
-	
+		}
+	 
+	     
+	  
+	  
 	
 	
 }
