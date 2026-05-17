@@ -26,7 +26,7 @@ public class SecurityConfig  {
 	private JwtAuthenticationEntryPoint authenticationEntryPoint;
 		
 	
-	
+	 @Bean
 	  public JwtAuthTokenFilter authenticationJwtTokenFilter() {
 	    return new JwtAuthTokenFilter();
 	  }
@@ -41,7 +41,7 @@ public class SecurityConfig  {
 	      return authProvider;
 	  }
 	  
-	 
+	  @Bean
 	  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
 	    return authConfig.getAuthenticationManager();
 	  }
@@ -65,9 +65,7 @@ public class SecurityConfig  {
 			.antMatchers(HttpMethod.DELETE, "/master/deleteBloodGroupId").hasAuthority("Admin")
 			.antMatchers(HttpMethod.POST, "/master/**").permitAll()
 			.antMatchers(HttpMethod.POST, "/upload").permitAll()
-			//.antMatchers("/master/**").hasAnyAuthority("Admin")
-			
-			//.antMatchers(HttpMethod.GET, "/student/**").permitAll()
+		
 			.antMatchers("/student/**").permitAll()
 			.antMatchers(HttpMethod.POST, "/student/**").permitAll()
 					
