@@ -52,6 +52,41 @@ public class AuthServiceImpl implements AuthService {
 
 				break;
 			}
+			case "User": {
+
+				roles.add(roleRepository.findByRoleName("User"));
+				break;
+			}
+
+			case "Teacher": {
+
+				roles.add(roleRepository.findByRoleName("Teacher"));
+				break;
+			}
+
+			case "Principal": {
+
+				roles.add(roleRepository.findByRoleName("Principal"));
+				break;
+			}
+			
+			case "Librarian": {
+
+				roles.add(roleRepository.findByRoleName("Librarian"));
+				break;
+			}
+
+			case "Accountant": {
+
+				roles.add(roleRepository.findByRoleName("Accountant"));
+				break;
+			}
+
+			case "Receptionst": {
+
+				roles.add(roleRepository.findByRoleName("Receptionst"));
+				break;
+			}
 
 			case "HR": {
 
@@ -59,17 +94,12 @@ public class AuthServiceImpl implements AuthService {
 
 				break;
 			}
-			case "User": {
-
-				roles.add(roleRepository.findByRoleName("User"));
-				break;
-			}
-
+			
 			default:
 				//return ResponseEntity.badRequest().body("Specified role not found");
 				return null;
 			}
-			System.out.println("Inside Loop");
+			
 		}
 		
 		user.setRoles(roles);

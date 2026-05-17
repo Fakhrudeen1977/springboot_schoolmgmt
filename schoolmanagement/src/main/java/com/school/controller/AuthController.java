@@ -1,10 +1,8 @@
 package com.school.controller;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.school.dto.UserDto;
 import com.school.entity.AuthResponse;
 import com.school.entity.RefreshToken;
-import com.school.entity.Role;
 import com.school.entity.TokenRefreshResponse;
 import com.school.entity.User;
-import com.school.repository.RoleRepository;
 import com.school.repository.UserRepository;
 import com.school.security.JwtTokenUtil;
 import com.school.security.TokenRefreshRequest;
@@ -46,9 +42,7 @@ public class AuthController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
-	private RoleRepository roleRepository;
-
+	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
