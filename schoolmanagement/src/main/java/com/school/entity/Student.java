@@ -6,7 +6,6 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -87,7 +86,7 @@ public class Student implements Serializable{
 		
 		@Column(name="FATHER_NAME")
 		public String getFatherName() {
-			return fatherName.toUpperCase();
+			return fatherName;
 		}
 		public void setFatherName(String fatherName) {
 			this.fatherName = fatherName;
@@ -121,7 +120,7 @@ public class Student implements Serializable{
 			
 		@Column(name="CONTACT_ADDRESS")
 		public String getContactAddress() {
-			return contactAddress.toUpperCase();
+			return contactAddress;
 		}
 		public void setContactAddress(String contactAddress) {
 			this.contactAddress = contactAddress;
