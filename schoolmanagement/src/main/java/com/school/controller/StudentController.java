@@ -61,7 +61,7 @@ public class StudentController {
 
 		
 		logger.info("SaveStudent controller reached");
-		System.out.println("Father Name"+" "+fatherName);
+		
 				
 		StudentDto savedStudentDto = new StudentDto();		
 		StudentImageDto savedStudentImageDto=new StudentImageDto();

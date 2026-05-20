@@ -45,8 +45,8 @@ public class StudentServiceImpl implements StudentService{
 		Student student= mapper.map(studentDto, Student.class);				
 		
 		if(!checkPhotoNumberExistOrNot(student.getPhotoNumber())) {
-			System.out.println("Saveed Studetn Information"+" "+student.getFatherName());	
-			//student= studentRepository.saveAndFlush(student);
+			
+			student= studentRepository.saveAndFlush(student);
 			savedDto  = mapper.map(student, StudentDto.class);
 			return savedDto;
 		}
