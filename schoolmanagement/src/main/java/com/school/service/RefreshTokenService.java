@@ -17,7 +17,7 @@ import com.school.repository.UserRepository;
 @Service
 public class RefreshTokenService {
 	
-	 @Value("${jwtRefreshExpirationMs}")
+	 @Value("${jwt.refresh-expiration}")
 	  private Long refreshTokenDurationMs;
 
 	  @Autowired
