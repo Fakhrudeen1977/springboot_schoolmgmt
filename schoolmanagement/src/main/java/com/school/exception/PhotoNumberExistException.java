@@ -1,19 +1,14 @@
 package com.school.exception;
 
-public class PhotoNumberExistException extends Exception {
+public class PhotoNumberExistException extends RuntimeException {
 
-	
-	private String message="";
-	private static final long serialVersionUID = 1L;
-	
-	public PhotoNumberExistException() {
 		
-	}
-	
+	private static final long serialVersionUID = 1L;
+		
 	public PhotoNumberExistException(String message) {
 		
 		super(message);
-		this.message=message;
+		
 		
 		
 		

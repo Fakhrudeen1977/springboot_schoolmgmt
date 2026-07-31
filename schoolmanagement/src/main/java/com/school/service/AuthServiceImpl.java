@@ -10,107 +10,72 @@ import org.springframework.transaction.annotation.Transactional;
 import com.school.dto.UserDto;
 import com.school.entity.Role;
 import com.school.entity.User;
+import com.school.exception.EmailAlreadyExistsException;
+import com.school.exception.UsernameAlreadyExistsException;
 import com.school.mapper.OrikaBeanMapper;
 import com.school.repository.RoleRepository;
 import com.school.repository.UserRepository;
+
 @Service
 public class AuthServiceImpl implements AuthService {
-	
+
 	@Autowired
 	private OrikaBeanMapper mapper;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private RoleRepository roleRepository;
 
-	
-
 	@Override
 	@Transactional
-	public UserDto saveUser(UserDto userDto,String[] userRoles) {
-		
-		
-		UserDto savedUserDto=null;	
-		Set<Role> roles = new HashSet<>();		
-		User user= mapper.map(userDto, User.class);				
-		
-		String[] roleArr = userRoles;
+	public UserDto saveUserWithRoles(UserDto userDto, Long[] userRoles) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
 
-		if (roleArr == null) {
-
-			roles.add(roleRepository.findByRoleName("User"));
+		if (userRepository.existsByUserName(userDto.getUserName())) {
+			throw new UsernameAlreadyExistsException("Username is already taken");
 		}
 
-		for (String role : roleArr) {
-
-			switch (role) {
-			case "Admin": {
-
-				roles.add(roleRepository.findByRoleName("Admin"));
-
-				break;
-			}
-			case "User": {
-
-				roles.add(roleRepository.findByRoleName("User"));
-				break;
-			}
-
-			case "Teacher": {
-
-				roles.add(roleRepository.findByRoleName("Teacher"));
-				break;
-			}
-
-			case "Principal": {
-
-				roles.add(roleRepository.findByRoleName("Principal"));
-				break;
-			}
-			
-			case "Librarian": {
-
-				roles.add(roleRepository.findByRoleName("Librarian"));
-				break;
-			}
-
-			case "Accountant": {
-
-				roles.add(roleRepository.findByRoleName("Accountant"));
-				break;
-			}
-
-			case "Receptionst": {
-
-				roles.add(roleRepository.findByRoleName("Receptionst"));
-				break;
-			}
-
-			case "HR": {
-
-				roles.add(roleRepository.findByRoleName("HR"));
-
-				break;
-			}
-			
-			default:
-				//return ResponseEntity.badRequest().body("Specified role not found");
-				return null;
-			}
-			
+		if (userRepository.existsByEmail(userDto.getEmail())) {
+			throw new EmailAlreadyExistsException("Email is already taken");
 		}
 		
+
+		User user = mapper.map(userDto, User.class);
+
+		Set<Role> roles = new HashSet<>();
+
+		// If no role is selected, assign default User role
+		if (userRoles == null || userRoles.length == 0) {
+
+			Role defaultRole = roleRepository.findByRoleName("User");
+
+			if (defaultRole == null) {
+				throw new RuntimeException("Default role 'User' not found.");
+			}
+
+			roles.add(defaultRole);
+
+		} else {
+
+			for (Long roleId : userRoles) {
+
+				Role role = roleRepository.findByRoleId(roleId);
+
+				if (role == null) {
+					throw new RuntimeException("Role not found with id : " + roleId);
+				}
+
+				roles.add(role);
+			}
+		}
+
 		user.setRoles(roles);
 
-		user= userRepository.saveAndFlush(user);
-		savedUserDto  = mapper.map(user, UserDto.class);
-		return savedUserDto;
+		User savedUser = userRepository.save(user);
 
-		
-		
-		
+		return mapper.map(savedUser, UserDto.class);
+
 	}
 
 }

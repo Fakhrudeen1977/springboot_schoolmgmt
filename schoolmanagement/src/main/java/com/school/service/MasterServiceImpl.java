@@ -1,7 +1,6 @@
 package com.school.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -34,156 +33,120 @@ import com.school.repository.UserRepository;
 
 @Service
 public class MasterServiceImpl implements MasterService {
-	
-	
+
 	@Autowired
 	private ClassRepository classRepository;
-	
+
 	@Autowired
 	private RoleRepository roleRepository;
 
 	@Autowired
 	private BloodRepository bloodGrpRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private ReligionRepository religionRepository;
 
-
 	@Autowired
 	private OrikaBeanMapper mapper;
-	
+
 	@Autowired
 	private StudentRepository studentRepository;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MasterServiceImpl.class);
-	
-	@Override
-	public List<BloodGroupDto> getBloodGroupList() {		
-		
-		List<BloodGroup> bloodGroupList= bloodGrpRepository.findAllActiveOnly();
-		List<BloodGroupDto> bloodGroupDtoList=mapper.mapAsList(bloodGroupList, BloodGroupDto.class);
-		return bloodGroupDtoList;
-		
-	}
-	
-	
 
 	@Override
-	public Page<ClassDetails> getClassDetailList(int currentPage,int pageSize) {
+	public List<BloodGroupDto> getBloodGroupList() {
+
+		List<BloodGroup> bloodGroupList = bloodGrpRepository.findAllActiveOnly();
+		List<BloodGroupDto> bloodGroupDtoList = mapper.mapAsList(bloodGroupList, BloodGroupDto.class);
+		return bloodGroupDtoList;
+
+	}
+
+	@Override
+	public Page<ClassDetails> getClassDetailList(int currentPage, int pageSize) {
 		// TODO Auto-generated method stub
-				
+
 		Pageable paging = PageRequest.of(currentPage, pageSize);
 
 		Page<ClassDetails> pagedResult = classRepository.findAll(paging);
-		
+
 		return pagedResult;
 	}
 
-	@Override
-	public List<Role> getRoleList() {
-		// TODO Auto-generated method stub
-		return roleRepository.findAll();
-	}
+	
 
 	@Override
 	@Transactional
 	public BloodGroupDto saveBloodGroup(BloodGroupDto bloodGroupDto) {
-			
-		
-		bloodGroupDto.setActiveStatus(true); 
-		BloodGroup bloodGroup= mapper.map(bloodGroupDto, BloodGroup.class);
-		bloodGroup= bloodGrpRepository.saveAndFlush(bloodGroup);
-				
-		BloodGroupDto bloodGroupDto1  = mapper.map(bloodGroup, BloodGroupDto.class);
+		logger.info(" SaveBloodGroup ServiceImpl Method");
+		bloodGroupDto.setActiveStatus(true);
+		BloodGroup bloodGroup = mapper.map(bloodGroupDto, BloodGroup.class);
+		bloodGroup = bloodGrpRepository.saveAndFlush(bloodGroup);
+
+		BloodGroupDto bloodGroupDto1 = mapper.map(bloodGroup, BloodGroupDto.class);
 		return bloodGroupDto1;
-		
-		}
+
+	}
 
 	@Override
 	@Transactional
 	public ClassDetailsDto saveClassDetail(ClassDetailsDto classDetailsDto) {
-		ClassDetails classDetails= mapper.map(classDetailsDto, ClassDetails.class);
-		classDetails= classRepository.saveAndFlush(classDetails);
-				
-		ClassDetailsDto classDetailsDto1  = mapper.map(classDetails, ClassDetailsDto.class);
+		logger.info("SaveClassDetail ServiceImpl Method");
+		ClassDetails classDetails = mapper.map(classDetailsDto, ClassDetails.class);
+		classDetails = classRepository.saveAndFlush(classDetails);
+
+		ClassDetailsDto classDetailsDto1 = mapper.map(classDetails, ClassDetailsDto.class);
 		return classDetailsDto1;
 	}
 
-
-
-	@Override
-	@Transactional
-	public void deleteBloodGroupId(Long bloodGroupId) throws BloodGroupIdNotFoundException  {		 
-		
-		 try {
-			 if(this.checkBloodGroupIdExistOrNot(bloodGroupId)) {				 
-				 bloodGrpRepository.deleteBloodGroupId(bloodGroupId);				 		
-				
-			 }
-			 else 
-				 throw new BloodGroupIdNotFoundException("BloodGroup Id"+" "+bloodGroupId+" "+"Not Found");			 
-				
-		 }
-		
-		catch(Exception e) {
-			System.out.println("Exception Occured");
-		} 
-	
-
-}	
-	
-	
-	public boolean checkBloodGroupIdExistOrNot(Long bloodGroupId  ) {
-		boolean isFlag=false;
-		Optional<BloodGroup> option = bloodGrpRepository.findById(bloodGroupId);
-
-		if (option.isPresent()) {
-			return isFlag=true;
-		}
-
-		return isFlag;
-	}
-
-
-
 	@Override
 	public List<Student> getStudentListByClassId(Long classId) {
-		
+		logger.info("Get StudentListByClassId ServiceImpl Method");
 		return studentRepository.getStudentListByClassId(classId);
-	}	
-	
-	@Override
-	public List<UserDto> getUserList() {
-		List<User> userList= userRepository.findAll();
-		List<UserDto> userDtoList  = mapper.mapAsList(userList, UserDto.class);		
-		return userDtoList;
-		
 	}
 
+	@Override
+	public List<UserDto> getUserList() {
+		List<User> userList = userRepository.findAll();
+		List<UserDto> userDtoList = mapper.mapAsList(userList, UserDto.class);
+		return userDtoList;
 
+	}
 
-	@Transactional 
+	@Transactional
 	@Override
 	public int deleteByUserId(Long userId) {
-		System.out.println("Reached Here"+"  "+userId);
+
 		userRepository.deleteRolesByUserId(userId);
-		userRepository.deleteByUserId(userId);		
+		userRepository.deleteByUserId(userId);
 		return 1;
 	}
 
-
-
 	@Override
 	public List<ReligionDto> getReligionList() {
-		
-		List<Religion> religionList= religionRepository.findAll();
-		List<ReligionDto> religionDtoList=mapper.mapAsList(religionList, ReligionDto.class);
+		logger.info("Get ReligionList ServiceImpl Method");
+		List<Religion> religionList = religionRepository.findAll();
+		List<ReligionDto> religionDtoList = mapper.mapAsList(religionList, ReligionDto.class);
 		return religionDtoList;
-		
+
 	}
-	
+
+	@Override
+	@Transactional
+	public void deleteByBloodGroupId(Long bloodGroupId) throws BloodGroupIdNotFoundException {
+
+		logger.info("DeleteBloodGroupId ServiceImpl Method");
+		if (!bloodGrpRepository.existsById(bloodGroupId)) {
+
+			throw new BloodGroupIdNotFoundException("BloodGroup Id" + " " + bloodGroupId + " " + "Not Found");
+		}
+
+		bloodGrpRepository.deleteById(bloodGroupId);
+
+	}
 
 }

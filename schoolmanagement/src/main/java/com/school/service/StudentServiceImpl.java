@@ -8,10 +8,9 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
-import com.school.SchoolmanagementApplication;
 import com.school.dto.StudentDto;
 import com.school.entity.Student;
 import com.school.entity.StudentImage;

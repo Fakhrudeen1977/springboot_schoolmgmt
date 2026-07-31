@@ -62,6 +62,7 @@ public class SecurityConfig  {
 			.antMatchers(HttpMethod.GET, "/api/**").permitAll()
 						
 			.antMatchers("/master/**").permitAll()
+			.antMatchers("/role/**").permitAll()
 			.antMatchers(HttpMethod.DELETE, "/master/deleteBloodGroupId").hasAuthority("Admin")
 			.antMatchers(HttpMethod.POST, "/master/**").permitAll()
 			.antMatchers(HttpMethod.POST, "/upload").permitAll()

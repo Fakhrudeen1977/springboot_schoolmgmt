@@ -13,7 +13,7 @@ import com.school.entity.User;
 import com.school.queryconstant.Querys;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 	
 	
  

@@ -39,6 +39,20 @@ public class GlobalExceptionHandler {
 	  }
 	 
 	 
+
+	 @ExceptionHandler(RoleIdNotFoundException.class)
+	  public ResponseEntity<ErrorResponse> roleIdNotFoundException(RoleIdNotFoundException ex, WebRequest request) {
+		 System.out.println("RoleIdNotFoundException Exception Occured ***********");
+		 ErrorResponse message = new ErrorResponse(
+	        HttpStatus.NOT_FOUND.value(),
+	        new Date(),
+	        ex.getMessage(),
+	        request.getDescription(false));
+	    
+	    return new ResponseEntity<ErrorResponse>(message, HttpStatus.NOT_FOUND);
+	  }
+	 
+	 
 	 @ExceptionHandler(PhotoNumberExistException.class)
 	  public ResponseEntity<ErrorResponse> photoNumberExistException(PhotoNumberExistException ex, WebRequest request) {
 		 System.out.println("PhotoNumberExistException Exception Occured "+" "+ex.getMessage());
@@ -51,6 +65,20 @@ public class GlobalExceptionHandler {
 	    return new ResponseEntity<ErrorResponse>(message, HttpStatus.FOUND);
 	  }
 	 
+	 
+	 @ExceptionHandler(EmailAlreadyExistsException.class)
+	    public ResponseEntity<String> handleEmailException(
+	            EmailAlreadyExistsException ex) {
+
+	        return ResponseEntity.badRequest().body(ex.getMessage());
+	    }
+	 
+	 @ExceptionHandler(UsernameAlreadyExistsException.class)
+	    public ResponseEntity<String> handleUsernameException(
+	            UsernameAlreadyExistsException ex) {
+
+	        return ResponseEntity.badRequest().body(ex.getMessage());
+	    }
 	 
 	 
 	 @ExceptionHandler(Exception.class)

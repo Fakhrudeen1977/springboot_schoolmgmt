@@ -1,7 +1,6 @@
 package com.school.controller;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,19 +16,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.school.dto.BloodGroupDto;
 import com.school.dto.ClassDetailsDto;
 import com.school.dto.ReligionDto;
 import com.school.dto.UserDto;
 import com.school.entity.ClassDetails;
-import com.school.entity.Role;
 import com.school.entity.Student;
 import com.school.service.MasterService;
 
 @RestController
 @RequestMapping("/master")
-@CrossOrigin(origins = "http://localhost:4200")
 public class MasterController {
 
 	@Autowired
@@ -45,6 +40,7 @@ public class MasterController {
 	public ResponseEntity<BloodGroupDto> saveBloodGroup(@RequestBody BloodGroupDto bloodGroupDto) {
 		BloodGroupDto savedBloodGrpDto = new BloodGroupDto();
 
+		logger.info("Save BloodGroup -Method");
 		try {
 
 			if (bloodGroupDto.getBloodId() == null) {
@@ -67,6 +63,7 @@ public class MasterController {
 
 	@GetMapping("/getBloodGroupList")
 	public ResponseEntity<List<BloodGroupDto>> getBloodGroupList() {
+		logger.info("Get BloodGroupList -Method");
 	
 		List<BloodGroupDto> bloodGroupDtoList = masterService.getBloodGroupList();
 		return ResponseEntity.ok(bloodGroupDtoList);
@@ -74,21 +71,18 @@ public class MasterController {
 
 	@GetMapping("/getReligionList")
 	public ResponseEntity<List<ReligionDto>> getReligionList() {
-		
+		logger.info("Get ReligionList -Method");
 	
 		List<ReligionDto> religionDtoList = masterService.getReligionList();
-		System.out.println("Length of Religion List"+" "+religionDtoList.size());
+		
 		return ResponseEntity.ok(religionDtoList);
 	}
-	
-	
-	
-	
+		
 	
 	@PostMapping("/saveClassDetail")
 	public ResponseEntity<ClassDetailsDto> saveClassDetail(@RequestBody ClassDetailsDto classDetailsDto) {
 		ClassDetailsDto savedClassDetailsDto = new ClassDetailsDto();
-		
+		logger.info("SaveClassDetail -Method");
 		try {
 
 			if (classDetailsDto.getClassId() == null) {
@@ -109,7 +103,7 @@ public class MasterController {
 
 	@GetMapping("/getClassDetailList")
 	public ResponseEntity<Page<ClassDetails>> getClassDetailList(@RequestParam String pageNo , @RequestParam String perPage) {
-		
+		logger.info("Get ClassDetailList -Method");
 			
 		 Page<ClassDetails> list =masterService.getClassDetailList(Integer.parseInt(pageNo),Integer.parseInt(perPage));
 
@@ -118,42 +112,30 @@ public class MasterController {
 	
 	}
 	
-	
-	
 
-	@DeleteMapping("/deleteBloodGroupId/{bloodGroupId}")
-	public ResponseEntity<String> deleteBloodGroupId(@PathVariable Long bloodGroupId) {
-		
-			ResponseEntity<String> resp = null;
-			 try {
-				 masterService.deleteBloodGroupId(bloodGroupId);
-				 resp = new ResponseEntity<String>("Student '" + bloodGroupId + "' deleted", HttpStatus.OK);
-			 }
-			 catch(Exception e) {
-				 
-			 }
-						
-			 return resp;
+	@DeleteMapping("/deleteByBloodGroupId/{bloodGroupId}")
+	public ResponseEntity<String> deleteByBloodGroupId(@PathVariable Long bloodGroupId) {				 
+			 ResponseEntity<String> resp = null;
+			 masterService.deleteByBloodGroupId(bloodGroupId);
+		     resp = new ResponseEntity<String>("Blood Group with ID  '" + bloodGroupId + "' deleted", HttpStatus.OK);
 
+			return resp;		    
+			
+			
 	}
 
 	@GetMapping("/getStudentListByClassId/{classId}")
-	public ResponseEntity<List<Student>> getStudentListByClassName(@PathVariable Long classId) {
-		
+	public ResponseEntity<List<Student>> getStudentListByClassId(@PathVariable Long classId) {
+		logger.info("Get StudentListByClassName -Method");
 		List<Student> studentList = masterService.getStudentListByClassId(classId);
 		return ResponseEntity.ok(studentList);
 
 	}
-
-	@GetMapping("/getRoleList")
-	public ResponseEntity<List<Role>> getRoleList() {
-		List<Role> roleList = masterService.getRoleList();
-		return ResponseEntity.ok(roleList);
-
-	}
+	
 
 	@GetMapping("/getUserList")
 	public ResponseEntity<List<UserDto>> getUserList() {
+		logger.info("Get UserList -Method");
 		List<UserDto> userDtoList = masterService.getUserList();
 		return ResponseEntity.ok(userDtoList);
 

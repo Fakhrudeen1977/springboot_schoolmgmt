@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,12 +37,12 @@ import com.school.util.ImageUtil;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AuthController.class); 
 
 	@Autowired
 	private UserRepository userRepository;
-
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -62,7 +63,7 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public ResponseEntity<?> userLogin(@RequestBody User user) {
-		System.out.println("AuthController -- userLogin");
+		logger.info("AuthController -- UserLogin method");
 
 		if (!userRepository.existsByUserName(user.getUserName())) {
 			return ResponseEntity.badRequest().body("Username does not Exist");
@@ -100,6 +101,7 @@ public class AuthController {
 
 	@PostMapping("/refreshtoken")
 	public ResponseEntity<?> refreshtoken(@RequestBody TokenRefreshRequest request) {
+		logger.info("AuthController -- RefreshToken method");
 		String requestRefreshToken = request.getRefreshToken();
 
 		Optional<RefreshToken> option = refreshTokenService.findByToken(requestRefreshToken);
@@ -125,26 +127,18 @@ public class AuthController {
 
 	}
 
-	@PostMapping("/userSignup")
-	//public ResponseEntity<?> userSignup(@RequestBody SignupRequestDto signupRequest) {
-		
-	public ResponseEntity<?> userSignup(
+	@PostMapping("/saveUserWithRoles")
+	public ResponseEntity<UserDto> saveUserWithRoles(
 			@RequestParam String name,
 			@RequestParam String userName,
 			@RequestParam String password,
 			@RequestParam String email,
-			@RequestParam String[] role,
+			@RequestParam Long[] role,
 			@RequestParam("file") MultipartFile file)  throws IOException{
 			
+		logger.info("AuthController -- UserSignup method");
 		
-		if (userRepository.existsByUserName(userName)) {
-			return ResponseEntity.badRequest().body("Username is already taken");
-		}
-		if (userRepository.existsByEmail(email)) {
-			return ResponseEntity.badRequest().body("Email is already taken");
-						
-		}
-		
+				
 		UserDto userDto=new UserDto();		
 		userDto.setName(name);
 		userDto.setUserName(userName);
@@ -155,7 +149,7 @@ public class AuthController {
 		userDto.setImageType(file.getContentType());
 		userDto.setImageData(ImageUtil.compressImage(file.getBytes()));
 	    
-		userDto = authService.saveUser(userDto,role);	
+		userDto = authService.saveUserWithRoles(userDto,role);
 		
 		return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
 	  

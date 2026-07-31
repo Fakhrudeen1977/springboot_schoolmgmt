@@ -1,8 +1,6 @@
 package com.school.dto;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignupRequestDto implements Serializable{
 	/**
@@ -13,7 +11,10 @@ public class SignupRequestDto implements Serializable{
 	private String userName; 
 	private String email;
 	private String password;	
-	private String[] roles;
+	//private String[] roles;
+	
+	private Long[] roles;
+	
 	private String imageFileName;
 	private String imageType;
 	private byte[] imageData;	
@@ -54,13 +55,13 @@ public class SignupRequestDto implements Serializable{
 		this.password = password;
 	}
 
-	public String[] getRoles() {
+	/*public String[] getRoles() {
 		return roles;
 	}
 
 	public void setRoles(String[] roles) {
 		this.roles = roles;
-	}
+	}*/
 
 	public String getImageFileName() {
 		return imageFileName;
@@ -84,6 +85,14 @@ public class SignupRequestDto implements Serializable{
 
 	public void setImageData(byte[] imageData) {
 		this.imageData = imageData;
+	}
+
+	public Long[] getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Long[] roles) {
+		this.roles = roles;
 	}
 
 	

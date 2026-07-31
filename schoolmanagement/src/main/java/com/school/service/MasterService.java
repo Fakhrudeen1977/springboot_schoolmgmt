@@ -9,20 +9,21 @@ import com.school.dto.ClassDetailsDto;
 import com.school.dto.ReligionDto;
 import com.school.dto.UserDto;
 import com.school.entity.ClassDetails;
-import com.school.entity.Role;
 import com.school.entity.Student;
 import com.school.exception.BloodGroupIdNotFoundException;
 
-
 public interface MasterService {
-	public List<BloodGroupDto> getBloodGroupList();
-	public Page<ClassDetails> getClassDetailList(int currentPage,int pageSize);
-	public List<Role> getRoleList();
-	
-	public List<ReligionDto> getReligionList();
 	public BloodGroupDto saveBloodGroup(BloodGroupDto bloodGrpDto);
+	public List<BloodGroupDto> getBloodGroupList();	
+	public void deleteByBloodGroupId(Long bloodGroupId) throws BloodGroupIdNotFoundException ;
+	
+	
+	public Page<ClassDetails> getClassDetailList(int currentPage,int pageSize);
+		
+	public List<ReligionDto> getReligionList();
+	
 	public ClassDetailsDto saveClassDetail(ClassDetailsDto classDetailsDto);
-	public void deleteBloodGroupId(Long bloodGroupId) throws BloodGroupIdNotFoundException ;
+	
 	
 	public List<Student> getStudentListByClassId(Long classId);
 	public List<UserDto> getUserList();
