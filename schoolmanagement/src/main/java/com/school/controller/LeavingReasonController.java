@@ -17,9 +17,7 @@ import com.school.service.LeaveReasonService;
 @RestController
 @RequestMapping("/leavereason")
 public class LeavingReasonController {
-	
-	
-	
+		
 	@Autowired
 	private LeaveReasonService leaveReasonService;
 

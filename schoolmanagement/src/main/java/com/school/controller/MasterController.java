@@ -33,14 +33,13 @@ public class MasterController {
 
 	@Autowired
 	PasswordEncoder encoder;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MasterController.class);
 
 	@PostMapping("/saveBloodGroup")
 	public ResponseEntity<BloodGroupDto> saveBloodGroup(@RequestBody BloodGroupDto bloodGroupDto) {
+		logger.info("Save BloodGroup -Controller");
 		BloodGroupDto savedBloodGrpDto = new BloodGroupDto();
-
-		logger.info("Save BloodGroup -Method");
 		try {
 
 			if (bloodGroupDto.getBloodId() == null) {
@@ -63,26 +62,26 @@ public class MasterController {
 
 	@GetMapping("/getBloodGroupList")
 	public ResponseEntity<List<BloodGroupDto>> getBloodGroupList() {
-		logger.info("Get BloodGroupList -Method");
-	
+		logger.info("Get BloodGroupList -Controller");
+
 		List<BloodGroupDto> bloodGroupDtoList = masterService.getBloodGroupList();
 		return ResponseEntity.ok(bloodGroupDtoList);
 	}
 
 	@GetMapping("/getReligionList")
 	public ResponseEntity<List<ReligionDto>> getReligionList() {
-		logger.info("Get ReligionList -Method");
-	
+		logger.info("Get ReligionList -Controller");
+
 		List<ReligionDto> religionDtoList = masterService.getReligionList();
-		
+
 		return ResponseEntity.ok(religionDtoList);
 	}
-		
-	
+
 	@PostMapping("/saveClassDetail")
 	public ResponseEntity<ClassDetailsDto> saveClassDetail(@RequestBody ClassDetailsDto classDetailsDto) {
+		logger.info("SaveClassDetail -Controller");
 		ClassDetailsDto savedClassDetailsDto = new ClassDetailsDto();
-		logger.info("SaveClassDetail -Method");
+		
 		try {
 
 			if (classDetailsDto.getClassId() == null) {
@@ -101,27 +100,46 @@ public class MasterController {
 
 	}
 
-	@GetMapping("/getClassDetailList")
-	public ResponseEntity<Page<ClassDetails>> getClassDetailList(@RequestParam String pageNo , @RequestParam String perPage) {
-		logger.info("Get ClassDetailList -Method");
-			
-		 Page<ClassDetails> list =masterService.getClassDetailList(Integer.parseInt(pageNo),Integer.parseInt(perPage));
+	@GetMapping("/getClassDetailListPagination")
+	public ResponseEntity<Page<ClassDetails>> getClassDetailListPagination(
+			@RequestParam(defaultValue = "0") int pageIndex, @RequestParam(defaultValue = "5") int pageSize) {
+		logger.info("Get ClassDetailList -Controller");
+		Page<ClassDetails> list = masterService.getClassDetailListPagination(pageIndex, pageSize);
 
-		 return ResponseEntity.ok(list);
-	
-	
+		return ResponseEntity.ok(list);
+
+	}
+
+	@GetMapping("/getClassDetailList")
+	public ResponseEntity<List<ClassDetailsDto>> getClassDetailList() {
+		logger.info("Get ClassDetailList -Controller");
+		List<ClassDetailsDto> list = masterService.getClassDetailList();
+		return ResponseEntity.ok(list);
+
 	}
 	
 
 	@DeleteMapping("/deleteByBloodGroupId/{bloodGroupId}")
-	public ResponseEntity<String> deleteByBloodGroupId(@PathVariable Long bloodGroupId) {				 
-			 ResponseEntity<String> resp = null;
-			 masterService.deleteByBloodGroupId(bloodGroupId);
-		     resp = new ResponseEntity<String>("Blood Group with ID  '" + bloodGroupId + "' deleted", HttpStatus.OK);
+	public ResponseEntity<String> deleteByBloodGroupId(@PathVariable Long bloodGroupId) {
+		logger.info("Get DeleteByBloodGroupId -Controller");
+		ResponseEntity<String> resp = null;
+		masterService.deleteByBloodGroupId(bloodGroupId);
+		resp = new ResponseEntity<String>("Blood Group with ID  '" + bloodGroupId + "' deleted", HttpStatus.OK);
 
-			return resp;		    
-			
-			
+		return resp;
+
+	}
+
+
+	@DeleteMapping("/deleteByClassId/{classId}")
+	public ResponseEntity<String> deleteByClassId(@PathVariable Long classId) {
+		logger.info("Get DeleteByClassId -Controller");
+		ResponseEntity<String> resp = null;
+		masterService.deleteByClassId(classId);
+		resp = new ResponseEntity<String>("Class with ID  '" + classId + "' deleted", HttpStatus.OK);
+
+		return resp;
+
 	}
 
 	@GetMapping("/getStudentListByClassId/{classId}")
@@ -131,7 +149,6 @@ public class MasterController {
 		return ResponseEntity.ok(studentList);
 
 	}
-	
 
 	@GetMapping("/getUserList")
 	public ResponseEntity<List<UserDto>> getUserList() {
@@ -143,7 +160,7 @@ public class MasterController {
 
 	@DeleteMapping("/deleteByUserId/{userId}")
 	public ResponseEntity<String> deleteByUserId(@PathVariable Long userId) {
-		
+
 		ResponseEntity<String> resp = null;
 		try {
 			int result = masterService.deleteByUserId(userId);
@@ -158,5 +175,4 @@ public class MasterController {
 
 	}
 
-	
 }

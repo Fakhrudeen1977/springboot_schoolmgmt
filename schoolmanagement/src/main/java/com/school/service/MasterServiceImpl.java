@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.school.dto.BloodGroupDto;
@@ -19,10 +20,10 @@ import com.school.dto.UserDto;
 import com.school.entity.BloodGroup;
 import com.school.entity.ClassDetails;
 import com.school.entity.Religion;
-import com.school.entity.Role;
 import com.school.entity.Student;
 import com.school.entity.User;
 import com.school.exception.BloodGroupIdNotFoundException;
+import com.school.exception.ClassIdNotFoundException;
 import com.school.mapper.OrikaBeanMapper;
 import com.school.repository.BloodRepository;
 import com.school.repository.ClassRepository;
@@ -36,9 +37,6 @@ public class MasterServiceImpl implements MasterService {
 
 	@Autowired
 	private ClassRepository classRepository;
-
-	@Autowired
-	private RoleRepository roleRepository;
 
 	@Autowired
 	private BloodRepository bloodGrpRepository;
@@ -67,12 +65,11 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public Page<ClassDetails> getClassDetailList(int currentPage, int pageSize) {
-		// TODO Auto-generated method stub
-
-		Pageable paging = PageRequest.of(currentPage, pageSize);
-
-		Page<ClassDetails> pagedResult = classRepository.findAll(paging);
+	public Page<ClassDetails> getClassDetailListPagination(int pageIndex, int pageSize) {
+				
+		
+		Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("classId").ascending());
+		Page<ClassDetails> pagedResult = classRepository.findAll(pageable);
 
 		return pagedResult;
 	}
@@ -147,6 +144,28 @@ public class MasterServiceImpl implements MasterService {
 
 		bloodGrpRepository.deleteById(bloodGroupId);
 
+	}
+
+	@Override
+	public List<ClassDetailsDto> getClassDetailList() {
+		logger.info("Get ClassDetailList ServiceImpl Method");
+		List<ClassDetails> classList = classRepository.findAll();
+		List<ClassDetailsDto> classDtoList = mapper.mapAsList(classList, ClassDetailsDto.class);
+		return classDtoList;
+	}
+
+	@Override
+	@Transactional
+	public void deleteByClassId(Long classId) throws ClassIdNotFoundException {
+		logger.info("DeleteByClassId ServiceImpl Method");
+		if (!classRepository.existsById(classId)) {
+
+			throw new ClassIdNotFoundException("Class Id" + " " + classId + " " + "Not Found");
+		}
+
+		classRepository.deleteById(classId);
+
+		
 	}
 
 }
