@@ -56,7 +56,7 @@ public class SecurityConfig  {
 		  http
 	      // Disable CSRF for this example (not recommended for production web apps)
 	      .csrf(csrf -> csrf.disable())
-		    
+	      //.cors(cors -> {})                  //using nginx only
 		  .authorizeHttpRequests(auth -> auth
 			.antMatchers("/auth/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/api/**").permitAll()
